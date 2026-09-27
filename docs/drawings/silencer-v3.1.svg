@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1450" height="1220" viewBox="0 0 1450 1220" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <pattern id="wood" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="14" height="14" fill="#D9B27C"/>
+      <line x1="0" y1="0" x2="0" y2="14" stroke="#B08A54" stroke-width="2"/>
+    </pattern>
+    <pattern id="wool" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#F2D98C"/>
+      <circle cx="3" cy="3" r="1.6" fill="#C9A94A"/>
+      <circle cx="9" cy="9" r="1.6" fill="#C9A94A"/>
+    </pattern>
+    <pattern id="perf" width="10" height="10" patternUnits="userSpaceOnUse">
+      <rect width="10" height="10" fill="#E8ECEF"/>
+      <circle cx="5" cy="5" r="1.8" fill="#7A8894"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0A7FB8"/>
+    </marker>
+    <marker id="dimT" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 5 L 10 5" stroke="#444" stroke-width="1.6"/>
+    </marker>
+    <style>
+      .t   { fill:#1A1A1A; font-size:15px; }
+      .ts  { fill:#333; font-size:13px; }
+      .tb  { fill:#123; font-size:19px; font-weight:700; }
+      .th  { fill:#0A4A73; font-size:16px; font-weight:700; }
+      .dim { stroke:#444; stroke-width:1.2; fill:none; }
+      .dimtxt { fill:#333; font-size:14px; }
+      .lead { stroke:#555; stroke-width:1; fill:none; }
+      .air { stroke:#0A7FB8; stroke-width:2.4; fill:none; stroke-dasharray:9 6; }
+      .frame { fill:none; stroke:#37474F; stroke-width:2.5; }
+    </style>
+  </defs>
+
+  <rect width="1450" height="1220" fill="#FFFFFF"/>
+  <text class="tb" x="100" y="42">ГРОУБОКС v3.1 · ДВУХКАМЕРНЫЙ ШУМОГЛУШИТЕЛЬ SF 4" (своими руками)</text>
+  <text class="t" x="100" y="66">Диссипативный (минвата за перфорацией) + реактивный (шейка между камерами) принцип. Размеры в мм.</text>
+
+  <!-- ================= ПРОДОЛЬНЫЙ РАЗРЕЗ ================= -->
+  <text class="th" x="100" y="102">ПРОДОЛЬНЫЙ РАЗРЕЗ</text>
+
+  <!-- корпус -->
+  <rect x="100" y="140" width="910" height="392" fill="url(#wood)" stroke="#8A6B3F" stroke-width="2"/>
+  <!-- съёмная крышка -->
+  <line x1="100" y1="165" x2="1010" y2="165" stroke="#B71C1C" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <circle cx="200" cy="152" r="5" fill="#37474F"/>
+  <circle cx="440" cy="152" r="5" fill="#37474F"/>
+  <circle cx="680" cy="152" r="5" fill="#37474F"/>
+  <circle cx="920" cy="152" r="5" fill="#37474F"/>
+  <!-- внутренняя полость -->
+  <rect x="125" y="165" width="860" height="342" fill="#FFFFFF" stroke="#8A6B3F" stroke-width="1.5"/>
+  <!-- минвата: верх/низ/торцы -->
+  <rect x="125" y="165" width="860" height="59" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <rect x="125" y="448" width="860" height="59" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <rect x="125" y="165" width="59" height="342" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <rect x="926" y="165" width="59" height="342" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <!-- перфорированный канал -->
+  <rect x="184" y="224" width="392" height="224" fill="url(#perf)" stroke="#37474F" stroke-width="1.6"/>
+  <rect x="590" y="224" width="336" height="224" fill="url(#perf)" stroke="#37474F" stroke-width="1.6"/>
+  <!-- перегородка с шейкой -->
+  <rect x="576" y="224" width="14" height="28" fill="url(#wood)" stroke="#8A6B3F" stroke-width="1.2"/>
+  <rect x="576" y="400" width="14" height="48" fill="url(#wood)" stroke="#8A6B3F" stroke-width="1.2"/>
+  <!-- фланцы -->
+  <rect x="75" y="266" width="50" height="140" fill="#B9C4CC" stroke="#37474F" stroke-width="2"/>
+  <rect x="985" y="266" width="50" height="140" fill="#B9C4CC" stroke="#37474F" stroke-width="2"/>
+
+  <!-- воздух -->
+  <path class="air" d="M 85 336 L 560 336" marker-end="url(#arr)"/>
+  <path class="air" d="M 600 336 L 975 336" marker-end="url(#arr)"/>
+  <text class="ts" x="300" y="322" fill="#0A7FB8">воздух (канал 160×160)</text>
+  <text class="ts" x="205" y="250">КАМЕРА 1 — диссипативная</text>
+  <text class="ts" x="640" y="250">КАМЕРА 2</text>
+
+  <!-- выноски справа -->
+  <path class="lead" d="M 600 152 L 1035 178"/>
+  <text class="ts" x="1040" y="182">съёмная крышка 18 + прокладка (винты М6)</text>
+  <path class="lead" d="M 420 195 L 1035 232"/>
+  <text class="ts" x="1040" y="236">минвата HVAC 40 мм, обойма стеклоткань</text>
+  <path class="lead" d="M 470 228 L 1035 286"/>
+  <text class="ts" x="1040" y="290">перф. экран 8 мм: отв. 4–5, 25–30% открыта</text>
+  <path class="lead" d="M 583 245 L 1035 340"/>
+  <text class="ts" x="1040" y="344">перегородка, шейка Ø120 (реактивное плечо)</text>
+  <path class="lead" d="M 1025 336 L 1045 392"/>
+  <text class="ts" x="1040" y="400">фланец Ø100 → гибкая вставка (обе стороны)</text>
+  <text class="ts" x="1040" y="452">отвод камеры 2 — в пленум модуля</text>
+
+  <!-- размеры -->
+  <line class="dim" x1="100" y1="566" x2="1010" y2="566" marker-start="url(#dimT)" marker-end="url(#dimT)"/>
+  <line class="dim" x1="100" y1="536" x2="100" y2="574"/>
+  <line class="dim" x1="1010" y1="536" x2="1010" y2="574"/>
+  <rect x="525" y="554" width="60" height="20" fill="#FFF"/>
+  <text class="dimtxt" x="532" y="570">650</text>
+  <line class="dim" x1="62" y1="140" x2="62" y2="532" marker-start="url(#dimT)" marker-end="url(#dimT)"/>
+  <line class="dim" x1="55" y1="140" x2="100" y2="140"/>
+  <line class="dim" x1="55" y1="532" x2="100" y2="532"/>
+  <text class="dimtxt" x="26" y="342">280</text>
+  <text class="dimtxt" x="1040" y="500">камеры ≈280 / 240, шейка Ø120</text>
+
+  <!-- ================= ПОПЕРЕЧНЫЙ РАЗРЕЗ ================= -->
+  <text class="th" x="100" y="612">ПОПЕРЕЧНЫЙ РАЗРЕЗ</text>
+  <rect x="100" y="640" width="392" height="392" fill="url(#wood)" stroke="#8A6B3F" stroke-width="2"/>
+  <line x1="100" y1="665" x2="492" y2="665" stroke="#B71C1C" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <circle cx="180" cy="652" r="5" fill="#37474F"/>
+  <circle cx="412" cy="652" r="5" fill="#37474F"/>
+  <rect x="125" y="665" width="342" height="342" fill="#FFFFFF" stroke="#8A6B3F" stroke-width="1.5"/>
+  <rect x="125" y="665" width="342" height="59" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <rect x="125" y="948" width="342" height="59" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <rect x="125" y="665" width="59" height="342" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <rect x="408" y="665" width="59" height="342" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <rect x="184" y="724" width="224" height="224" fill="url(#perf)" stroke="#37474F" stroke-width="1.6"/>
+  <text class="ts" x="230" y="842">КАНАЛ 160×160</text>
+
+  <!-- выноски -->
+  <path class="lead" d="M 300 652 L 520 668"/>
+  <text class="ts" x="525" y="672">съёмная крышка + прокладка</text>
+  <path class="lead" d="M 480 700 L 520 712"/>
+  <text class="ts" x="525" y="716">корпус: ЛДСП/фанера 18</text>
+  <path class="lead" d="M 437 800 L 520 756"/>
+  <text class="ts" x="525" y="760">минвата HVAC 40 мм (со всех сторон канала)</text>
+  <path class="lead" d="M 408 870 L 520 800"/>
+  <text class="ts" x="525" y="804">перф. экран 8 мм (оргалит/оцинковка)</text>
+  <text class="ts" x="525" y="852">скорость в канале: 0,9–1,5 м/с рабочие,</text>
+  <text class="ts" x="525" y="872">≤2,4 м/с на максимуме — тихо</text>
+  <text class="ts" x="525" y="912">сопротивление глушителя ≤10 Па</text>
+  <text class="ts" x="525" y="932">(фильтр угольный даёт 30–50 Па)</text>
+
+  <!-- ================= ДЕТАЛЬ ================= -->
+  <text class="th" x="700" y="612">ДЕТАЛЬ · КРЫШКА, ПЕРФОРАЦИЯ, ПОГЛОТИТЕЛЬ</text>
+  <!-- крышка -->
+  <rect x="700" y="640" width="420" height="30" fill="url(#wood)" stroke="#8A6B3F" stroke-width="1.5"/>
+  <!-- винт -->
+  <rect x="895" y="628" width="30" height="18" fill="#B9C4CC" stroke="#37474F" stroke-width="1.2"/>
+  <path d="M 895 637 L 925 637" stroke="#37474F" stroke-width="1.2"/>
+  <!-- прокладка -->
+  <line x1="700" y1="674" x2="1120" y2="674" stroke="#B71C1C" stroke-width="2" stroke-dasharray="5 4"/>
+  <!-- корпус -->
+  <rect x="700" y="678" width="30" height="220" fill="url(#wood)" stroke="#8A6B3F" stroke-width="1.5"/>
+  <!-- минвата -->
+  <rect x="730" y="678" width="110" height="220" fill="url(#wool)" stroke="#B08A54" stroke-width="1"/>
+  <!-- перфорация -->
+  <rect x="840" y="678" width="18" height="220" fill="url(#perf)" stroke="#37474F" stroke-width="1.2"/>
+  <!-- канал -->
+  <rect x="858" y="678" width="262" height="220" fill="#FFFFFF" stroke="#37474F" stroke-width="1.2"/>
+  <text class="ts" x="925" y="800">воздух</text>
+
+  <path class="lead" d="M 910 628 L 1145 660"/>
+  <text class="ts" x="1150" y="664">винт М6 (крышка съёмная)</text>
+  <path class="lead" d="M 960 674 L 1145 700"/>
+  <text class="ts" x="1150" y="704">уплотнительная прокладка —</text>
+  <text class="ts" x="1150" y="722">без неё звук «утекает» мимо поглотителя</text>
+  <path class="lead" d="M 785 678 L 1145 756"/>
+  <text class="ts" x="1150" y="760">минвата в обойме (стеклоткань/фольга)</text>
+  <path class="lead" d="M 849 780 L 1145 800"/>
+  <text class="ts" x="1150" y="804">перф. экран: отв. 4–5 мм, шаг 8–10</text>
+  <path class="lead" d="M 715 880 L 1145 844"/>
+  <text class="ts" x="1150" y="848">корпус 18 (масса) · стыки на герметике</text>
+  <text class="ts" x="700" y="940" fill="#B71C1C">Открытый поролон в канал не кладём: волокна/пыль в тракт и пожарный риск.</text>
+
+  <!-- ================= ПРИМЕЧАНИЯ ================= -->
+  <rect x="100" y="1060" width="1250" height="120" fill="#F4F7F9" stroke="#90A4AE" stroke-width="1.2"/>
+  <text class="ts" x="115" y="1084">1. Материал поглотителя — только HVAC (минвата 30–50 кг/м³ с покрытием, класс НГ/КМ0). Волокна — строго за перфорированным экраном, не в потоке.</text>
+  <text class="ts" x="115" y="1106">2. Две камеры: диссипативная (минвата гасит ВЧ/СЧ) + реактивная шейка Ø120 между ними (добавляет НЧ). Ожидаемое затухание 15–20 дБ(А).</text>
+  <text class="ts" x="115" y="1128">3. Короб ставим на собственную полку/кронштейны, НЕ вешаем на воздуховод; с обеих сторон — гибкие вставки 100 мм с хомутами.</text>
+  <text class="ts" x="115" y="1150">4. Ревизия: съёмная крышка, проверка поглотителя раз в 6–12 мес. Габариты камер уточнить под фактические фланцы SF4/фильтра.</text>
+</svg>

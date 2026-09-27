@@ -28,7 +28,7 @@
 2. **Полное описание проекта** → [`docs/proekt_v1.0.txt`](docs/proekt_v1.0.txt) — исследование сообществ, акустика, вентиляция, автополив, спецификация Spider Farmer GGS.
 3. **3D-модель** → `models/growbox_v3.step` — открыть в КОМПАС-3D (Файл → Открыть/Импорт), 76 именованных деталей; либо `models/viewer.html` + `models/growbox_v3.glb` в браузере.
 4. **Итоговый PDF** → `pdf/growbox_v31_rev2.pdf`.
-5. **v3.1 (в работе)** → [`docs/growbox_v3.1_acoustic-tech-module.md`](docs/growbox_v3.1_acoustic-tech-module.md) — верхний акустический техмодуль: сэндвич-стенки, виброразвязка SF4, шумоглушитель, пленум с лабиринтной перегородкой; чертёж в `docs/drawings/`.
+5. **v3.1 (в работе)** → [`docs/growbox_v3.1_acoustic-tech-module.md`](docs/growbox_v3.1_acoustic-tech-module.md) — верхний акустический техмодуль: сэндвич-стенки, виброразвязка SF4, пленум с лабиринтной перегородкой; и [`docs/growbox_v3.1_silencer.md`](docs/growbox_v3.1_silencer.md) — самодельный двухкамерный шумоглушитель (расчёт, материалы, сборка). Чертежи в `docs/drawings/`.
 
 ## 🔧 Ключевые решения v3.0
 
