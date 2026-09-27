@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Гроубокс v3.0</title>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+  body { margin: 0; background: #e8eaed; }
+  model-viewer { width: 1400px; height: 1000px; background: #e8eaed; }
+</style>
+</head>
+<body>
+<model-viewer id="mv" src="growbox_v3.glb" camera-controls disable-rotate
+  shadow-intensity="0.7" exposure="1.05" camera-target="625mm 1000mm 350mm"
+  min-field-of-view="22deg"></model-viewer>
+<script>
+  const mv = document.getElementById('mv');
+  function apply() {
+    const h = decodeURIComponent(location.hash.slice(1)) || '35deg 72deg 3400mm';
+    mv.cameraOrbit = h;
+    document.title = 'ready';
+  }
+  mv.addEventListener('load', apply);
+  window.addEventListener('hashchange', apply);
+</script>
+</body>
+</html>

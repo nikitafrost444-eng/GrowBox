@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Гроубокс v3.1 rev.2</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 15mm 16mm 15mm;
+    @bottom-left {
+      content: "Гроубокс v3.1 rev.2 · Модульная умная мебель · Spider Farmer GGS";
+      font-family: "Liberation Sans"; font-size: 7.5pt; color: #9aa0a6;
+    }
+    @bottom-right {
+      content: counter(page) " / " counter(pages);
+      font-family: "Liberation Sans"; font-size: 7.5pt; color: #9aa0a6;
+    }
+  }
+  @page cover { margin: 0; @bottom-left { content: ""; } @bottom-right { content: ""; } }
+
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Liberation Sans", sans-serif;
+    font-size: 9.5pt; line-height: 1.5; color: #23272e; margin: 0;
+  }
+  h1, h2, h3 { margin: 0; }
+
+  .cover { page: cover; width: 210mm; height: 296mm; background: #14171c; color: #fff; padding: 0; position: relative; }
+  .cover-band { position: absolute; left: 0; top: 0; width: 100%; height: 8mm; background: #2f9e44; }
+  .cover-inner { padding: 26mm 18mm 0 18mm; }
+  .cover-kicker { color: #2f9e44; font-size: 11pt; letter-spacing: 2.5pt; text-transform: uppercase; margin-bottom: 6mm; }
+  .cover h1 { font-size: 40pt; line-height: 1.1; letter-spacing: -0.5pt; }
+  .cover h1 .light { color: #b9bec6; font-weight: 300; }
+  .cover-sub { font-size: 12.5pt; color: #c8ccd2; margin-top: 5mm; width: 152mm; line-height: 1.55; }
+  .cover-model { position: absolute; right: 4mm; top: 92mm; width: 116mm; }
+  .cover-badges { position: absolute; left: 18mm; right: 18mm; bottom: 22mm; }
+  .badge-row { width: 100%; border-collapse: collapse; }
+  .badge-row td { border-top: 1px solid #3a3f47; padding: 4mm 2mm 4mm 0; vertical-align: top; width: 25%; }
+  .badge-v { font-size: 14pt; font-weight: bold; color: #fff; }
+  .badge-l { font-size: 8pt; color: #9aa0a6; text-transform: uppercase; letter-spacing: 1pt; }
+  .cover-foot { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; color: #6b7078; font-size: 8pt; border-top: 1px solid #2a2e35; padding-top: 3mm; }
+
+  h2.sec { font-size: 16.5pt; color: #14171c; margin: 0 0 4mm 0; padding-bottom: 2.5mm; border-bottom: 2.5pt solid #2f9e44; }
+  h2.sec .num { color: #2f9e44; font-weight: bold; margin-right: 3mm; }
+  h3 { font-size: 11pt; color: #14171c; margin: 5mm 0 2mm 0; }
+  h4 { font-size: 9.8pt; color: #20733a; margin: 4mm 0 1.5mm 0; text-transform: uppercase; letter-spacing: 0.5pt; }
+  p { margin: 0 0 2.5mm 0; text-align: justify; }
+  .lead { font-size: 10.5pt; color: #40464f; margin-bottom: 4mm; }
+  .page-break { page-break-before: always; }
+
+  table.t { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm 0; font-size: 9pt; }
+  table.t th { background: #14171c; color: #fff; text-align: left; padding: 2.2mm 2.5mm; font-size: 8.6pt; text-transform: uppercase; letter-spacing: 0.5pt; }
+  table.t td { border-bottom: 1px solid #e2e4e8; padding: 2mm 2.5mm; vertical-align: top; }
+  table.t tr:nth-child(even) td { background: #f6f7f9; }
+  table.t td.c { text-align: center; }
+  table.t td.b { font-weight: bold; }
+  .hl td { background: #eaf6ec !important; }
+
+  .cards { width: 100%; border-collapse: separate; border-spacing: 4mm 0; margin: 3mm -4mm 2mm -4mm; }
+  .cards td { width: 50%; vertical-align: top; padding: 0 0 5mm 0; }
+  .card { border: 1px solid #e2e4e8; border-top: 3pt solid #2f9e44; border-radius: 2mm; padding: 3mm; }
+  .card-img { width: 100%; height: 40mm; object-fit: contain; background: #fff; }
+  .card-name { font-size: 11pt; font-weight: bold; color: #14171c; margin: 2mm 0 0.5mm 0; }
+  .card-tag { display: inline-block; background: #eaf6ec; color: #20733a; font-size: 7.2pt; padding: 0.6mm 2mm; border-radius: 1mm; text-transform: uppercase; letter-spacing: 0.6pt; margin-bottom: 1.5mm; }
+  .card-spec { font-size: 8.2pt; color: #40464f; margin: 0; }
+  .card-spec b { color: #14171c; }
+  .card-role { font-size: 8.2pt; color: #20733a; margin-top: 1.5mm; padding-top: 1.5mm; border-top: 1px dashed #d6d9dd; }
+
+  .fig { width: 100%; margin: 3mm 0; text-align: center; }
+  .fig img { max-width: 100%; border: 1px solid #e2e4e8; border-radius: 1.5mm; }
+  .fig .cap { font-size: 8pt; color: #6b7078; margin-top: 1.5mm; }
+  .fig-row { width: 100%; border-collapse: separate; border-spacing: 3mm 0; margin: 3mm -3mm; table-layout: fixed; }
+  .fig-row td { width: 33.33%; text-align: center; vertical-align: top; }
+
+  .kv { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm 0; }
+  .kv td { padding: 1.8mm 2.5mm; border-bottom: 1px solid #e2e4e8; font-size: 9pt; }
+  .kv td.k { width: 42mm; color: #6b7078; }
+  .kv td.v { font-weight: bold; color: #14171c; }
+  .note { background: #f2f4f6; border-left: 3pt solid #2f9e44; padding: 3mm 4mm; margin: 3mm 0; font-size: 8.8pt; }
+  .warn { background: #fdf3e7; border-left: 3pt solid #e8a33d; padding: 3mm 4mm; margin: 3mm 0; font-size: 8.8pt; }
+  .danger { background: #fdeeee; border-left: 3pt solid #d9534f; padding: 3mm 4mm; margin: 3mm 0; font-size: 8.8pt; }
+  .zones { width: 100%; border-collapse: collapse; margin: 2mm 0; }
+  .zones td { padding: 2.2mm 3mm; font-size: 8.8pt; border-bottom: 1px solid #e2e4e8; }
+  .zones td.z1 { background: #eaf6ec; width: 34mm; font-weight: bold; color: #20733a; }
+  .zones td.z2 { width: 38mm; color: #14171c; font-weight: bold; }
+  .flow { background: #14171c; color: #e8eaed; padding: 4mm 5mm; border-radius: 2mm; margin: 3mm 0; font-size: 9pt; text-align: center; }
+  .flow b { color: #7fd99a; }
+  ul.tight { margin: 1mm 0 3mm 0; padding-left: 5mm; }
+  ul.tight li { margin-bottom: 1.2mm; }
+  .two-col { width: 100%; border-collapse: separate; border-spacing: 4mm 0; margin: 0 -4mm; }
+  .two-col td { width: 50%; vertical-align: top; }
+  .three-col { width: 100%; border-collapse: separate; border-spacing: 3mm 0; margin: 0 -3mm; }
+  .three-col td { width: 33.33%; vertical-align: top; }
+  .small { font-size: 8pt; color: #6b7078; }
+  .card, .note, .warn, .danger, .fig, .flow, tr { page-break-inside: avoid; }
+
+  .mod-card { border: 1px solid #e2e4e8; border-left: 4pt solid #2f9e44; border-radius: 1.5mm; padding: 3mm 4mm; margin-bottom: 3mm; }
+  .mod-card .mt { font-size: 11pt; font-weight: bold; color: #14171c; }
+  .mod-card .ms { font-size: 8pt; color: #2f9e44; text-transform: uppercase; letter-spacing: 0.8pt; }
+  .mod-card p { font-size: 8.8pt; margin: 1.5mm 0 0 0; }
+
+  .closing-band { background: #14171c; color: #fff; border-radius: 2mm; padding: 5mm 6mm; margin-top: 4mm; }
+  .closing-band table { width: 100%; border-collapse: collapse; }
+  .closing-band td { border-top: 1px solid #3a3f47; padding: 2.5mm 2mm 0 0; vertical-align: top; width: 25%; }
+  .cb-v { font-size: 12pt; font-weight: bold; color: #fff; }
+  .cb-l { font-size: 7.5pt; color: #9aa0a6; text-transform: uppercase; letter-spacing: 1pt; }
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="cover-band"></div>
+  <div class="cover-inner">
+    <div class="cover-kicker">Проект · Модульная умная мебель · rev.2</div>
+    <h1>ГРОУБОКС<br><span class="light">v3.1 · полное описание</span></h1>
+    <div class="cover-sub">Модульная система премиального тихого шкафа для выращивания 2 растений (SCROG):<br>
+    три мебельных модуля · верхний акустический отсек · выкатная камера · Spider Farmer GGS как единый мозг · независимый аварийный слой</div>
+    <img class="cover-model" src="img/render_iso.png">
+  </div>
+  <div class="cover-badges">
+    <table class="badge-row"><tr>
+      <td><div class="badge-v">3 модуля</div><div class="badge-l">скрытые стяжки</div></td>
+      <td><div class="badge-v">1250×700×2000</div><div class="badge-l">внешний канон, мм</div></td>
+      <td><div class="badge-v">100% GGS</div><div class="badge-l">единый мозг</div></td>
+      <td><div class="badge-v">Safety layer</div><div class="badge-l">аварийная защита</div></td>
+    </tr></table>
+  </div>
+  <div class="cover-foot">Полное проектное описание · концепция перед финальным CAD · 28 сентября 2026</div>
+</div>
+
+<!-- ================= 01 РЕЗЮМЕ ================= -->
+<h2 class="sec"><span class="num">01</span>Резюме проекта</h2>
+<p class="lead">Гроубокс v3.1 rev.2 — это не «шкаф с оборудованием внутри», а мебельная система, спроектированная
+как серийный продукт: три независимых модуля на скрытых межсекционных стяжках, полностью скрытая проводка,
+фронтальный сервис, тихий верхний вентиляционный отсек и автоматика, целиком построенная на экосистеме
+Spider Farmer GGS. Документ описывает проект полностью: архитектуру, каждый модуль, оборудование,
+управление, воду, электрику, безопасность, акустику, материалы и подготовку к CAD.</p>
+
+<h3>Три принципа, на которых стоит проект</h3>
+<table class="t">
+  <tr><th style="width:44mm;">Принцип</th><th>Содержание</th></tr>
+  <tr><td class="b">Внешне — мебель</td><td>Матовые фасады, Push-to-Open, скрытый замок, ни одной видимой решётки, провода или ручки. Шкаф не должен выглядеть как оборудование — это «абсолютный стелс» для жилой комнаты.</td></tr>
+  <tr><td class="b">Внутри — часы</td><td>Spider Farmer GGS управляет средой как единая система: свет, климат, полив, вентиляция — по триггерам и расписанию из одной точки. Механика, вода, электрика и аварийная защита — независимые инженерные слои.</td></tr>
+  <tr><td class="b">Всегда — тишина</td><td>Все шумные элементы вынесены в верхний акустический модуль с виброразвязкой, шумоглушителем и большим выходным пленумом. Цель — «не слышно во сне» в спальне.</td></tr>
+</table>
+
+<h3>Ключевые параметры</h3>
+<table class="two-col"><tr>
+<td>
+<table class="kv">
+  <tr><td class="k">Внешний канон</td><td class="v">1250 × 700 × 2000 мм</td></tr>
+  <tr><td class="k">Модули</td><td class="v">A — верхний технический · B — тех-колонна 400 · C — камера роста 796</td></tr>
+  <tr><td class="k">Растения</td><td class="v">2 шт., SCROG V-рамка, горшки 15 л на выкатной платформе</td></tr>
+  <tr><td class="k">Свет</td><td class="v">SE3000 + UV30/IR16, регулируемый подвес</td></tr>
+  <tr><td class="k">Управление</td><td class="v">Spider Farmer GGS (Controller + 2× AC10)</td></tr>
+  <tr><td class="k">Вода</td><td class="v">рабочий бак 20 л + резерв 20 л, автодолив</td></tr>
+  <tr><td class="k">Аварийный слой</td><td class="v">независимый: протечка → hard-off, watchdog</td></tr>
+  <tr><td class="k">Установка</td><td class="v">спальня; вытяжка отфильтрованного воздуха в комнату</td></tr>
+</table>
+</td>
+<td>
+<table class="t">
+  <tr><th>Задача</th><th>Решение</th></tr>
+  <tr><td>Скрытое выращивание в жилой комнате</td><td>Мебельный вид, свето- и запахонепроницаемость, скрытый замок</td></tr>
+  <tr><td>Тишина ночью</td><td>Верхний акустический модуль, сэндвич стен, виброразвязка</td></tr>
+  <tr><td>Климатическая стабильность</td><td>SensorPro (VPD/PAR/DLI), триггеры GGS, автодимм</td></tr>
+  <tr><td>Автономность</td><td>Smart Drip по почвенным данным, резервный бак, автодолив</td></tr>
+  <tr><td>Занос и транспортировка</td><td>3 модуля на скрытых стяжках, каждый проходит в дверь</td></tr>
+  <tr><td>Обслуживаемость</td><td>Фронтальный доступ ко всему: вода, фильтр, электрика — без разборки камеры</td></tr>
+  <tr><td>Безопасность</td><td>Независимый hard-off контур, разделение power/water, аварийные сценарии</td></tr>
+</table>
+</td>
+</tr></table>
+
+<h3>Что изменилось против v3.0 — и почему</h3>
+<table class="t">
+  <tr><th>Узел</th><th>Было (v3.0)</th><th>Стало (v3.1 rev.2)</th><th>Причина</th></tr>
+  <tr><td class="b">Корпус</td><td>Монолит 1250×700×2000</td><td>3 модуля на скрытых мебельных стяжках</td><td>Занос в квартиру, транспортировка, идеальная геометрия сборки</td></tr>
+  <tr><td class="b">Вентиляция</td><td>Вент-модуль в колонне + фильтр в камере</td><td>Отдельный верхний акустический модуль A (фильтр + SF4 + глушитель + пленум)</td><td>Шум изолирован от комнаты, сервис сверху/спереди</td></tr>
+  <tr><td class="b">Задняя стенка</td><td>Оргалит, колодец 58 мм</td><td>Двойная стенка, сервисный канал 80–100 мм, разделение power / low-voltage / water</td><td>Провода не «куча», а трассы; ничего не видно снаружи</td></tr>
+  <tr><td class="b">Растения</td><td>Горшки на коврике</td><td>Выкатная платформа на усиленных направляющих с фиксатором</td><td>Полный доступ к растениям, дренаж, эргономика</td></tr>
+  <tr><td class="b">Свет</td><td>SE3000 на актуаторе 12 В (мотор)</td><td>SE3000 на регулируемых роликовых подвесах (ход ~300 мм)</td><td>Меньше точек отказа и кабельных проблем; высота всё равно регулируется</td></tr>
+  <tr><td class="b">Управление</td><td>GGS + ESP32 (смешанная логика)</td><td>GGS — единственный normal-control; доп. контроллер только как аварийный сторож</td><td>Одна точка настройки, меньше программных зависимостей</td></tr>
+  <tr><td class="b">Полив</td><td>Самописная перистальтика 3× + pH</td><td>Spider Farmer Smart Drip (если совместим с AC10/Soil Sensor); pH/EC — отдельный сервисный контур</td><td>«Вся автоматика — Spider Farmer», химия не в GGS</td></tr>
+  <tr><td class="b">Механика дверей</td><td>Петли Blum, мебельные ручки</td><td>Blum Clip + Push-to-Open, скрытый электронный замок, без ручек</td><td>«Абсолютный стелс», мебельный вид без деталей оборудования</td></tr>
+  <tr><td class="b">Безопасность</td><td>Датчик протечки в коврике</td><td>Независимый safety-слой: leak → hard-off, watchdog, безопасные режимы</td><td>Аварийная логика не должна зависеть от «мозга»</td></tr>
+</table>
+
+<!-- ================= 02 АРХИТЕКТУРА МОДУЛЕЙ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">02</span>Модульная архитектура</h2>
+<p class="lead">Корпус состоит из трёх независимых мебельных модулей, которые жёстко и незаметно стягиваются
+между собой межсекционными мебельными стяжками. Каждый модуль проходит в стандартный дверной проём,
+перевозится отдельно и собирается на месте без потери геометрии.</p>
+
+<div class="mod-card">
+  <div class="ms">Модуль A · верхний технический</div>
+  <div class="mt">Акустический вентиляционный отсек — ≈300 мм высоты, на всю ширину 1250 мм</div>
+  <p><b>Содержимое:</b> угольный фильтр SF 4" (горизонтально) → вентилятор SF 4" на виброподвесах → шумоглушитель
+  → выходной пленум с металлической решёткой 400×300 в комнату. Внутри поддерживается лёгкое разрежение.
+  Перегородка модуля — сервисная зона с доступом к фильтру сверху/спереди без разборки камеры роста.
+  Верхний фасад модуля — на двух газлифтах.</p>
+  <p><b>Почему отдельный модуль:</b> всё шумное собрано в одном объёме с вибро/шумо/звукоизоляцией;
+  тепловая нагрузка вынесена из зоны растений; замена угля и обслуживание вентилятора — не трогая растения.</p>
+</div>
+
+<div class="mod-card">
+  <div class="ms">Модуль B · техническая колонна</div>
+  <div class="mt">Вода, насосы, увлажнение, электрика — ≈400 мм ширины × 1700 мм высоты</div>
+  <p><b>Содержимое (снизу вверх):</b> выдвижной ящик с рабочим баком 20 л (пищевой, кран слива, поддон + датчик
+  протечки) → сервисный ящик: насос полива / дозаторы / компрессор аэрации → секрет-бокс: увлажнитель SF 5 л
+  с патрубком в камеру → съёмная DIN-панель: GGS Controller, 2× AC10, блоки питания, аварийный контроллер →
+  резервный бак 20 л с механической защитой от перелива и автодоливом.</p>
+  <p><b>Принцип:</b> фронтальный сервис — ящики выдвигаются, панель снимается, слив доступен спереди.
+  Увлажнитель физически разнесён с электроникой (аэрозоль и плата — плохие соседи).</p>
+</div>
+
+<div class="mod-card">
+  <div class="ms">Модуль C · камера роста</div>
+  <div class="mt">Рабочая камера — ≈796 мм ширины × 1700 мм высоты</div>
+  <p><b>Содержимое:</b> выкатная платформа на усиленных направляющих (2 растения в горшках 15 л, EVA-поддон
+  с бортом 40–60 мм, датчик протечки в нижней точке, фиксатор от случайного выдвижения) → SCROG V-рамка
+  700×500 на кронштейнах, 4 уровня с шагом 150–180 мм → SE3000 + UV30/IR16 на регулируемых подвесах →
+  2–3 вентилятора обдува на магнитных/профильных креплениях без сверления → SensorPro в зоне канопы,
+  2× Soil Sensor Pro (по одному в горшок).</p>
+  <p><b>Покрытие:</b> матовая белая светоотражающая плёнка (отражение ~98%) по внутренним поверхностям;
+  по периметру двери — уплотнитель + «антисвет»; снаружи ничего не видно.</p>
+</div>
+
+<h3>Скрытые стяжки и геометрия</h3>
+<p>Модули стягиваются межсекционными мебельными стяжками (по 2–4 на стык) — жёстко, без видимых элементов.
+Стыки прокладываются уплотнителем, чтобы сохранить свето- и запахонепроницаемость. Порядок сборки на месте:
+модуль B (колонна) → модуль C (камера) → модуль A (верхний) сверху и стяжка. Каждый модуль имеет
+собственную сервисную панель, снимаемую без демонтажа соседних.</p>
+
+<div class="note"><b>Статус геометрии:</b> внешний канон 1250×700×2000 мм сохранён, но финальный BBox должен быть
+пересчитан после разбиения корпуса на модули — это пункт №1 чек-листа перед CAD (раздел 12).
+Проверить фактическую геометрию STEP-модели v3.0 перед адаптацией: в заметках проекта зафиксировано
+расхождение между каноном и моделью.</div>
+
+<!-- ================= 03 ГАБАРИТЫ И БЮДЖЕТ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">03</span>Габариты и вертикальный бюджет</h2>
+
+<h3>Раскладка по ширине — сходится точно</h3>
+<div class="flow"><b>18</b> стенка + <b>400</b> модуль B + <b>18</b> перегородка + <b>796</b> модуль C + <b>18</b> стенка = <b>1250 мм</b></div>
+
+<h3>Вертикальный бюджет — пересчёт под модуль A</h3>
+<p>Перенос вентиляции в верхний модуль высотой 300 мм уменьшает внутреннюю высоту камеры роста с 1964 мм
+(v3.0) до ≈1650 мм. Это главное следствие новой архитектуры — и ради него пришлось пересчитать всю
+вертикальную раскладку камеры. Ключевой вывод: <b>свет должен регулироваться по высоте</b> (роликовые подвесы),
+иначе рабочее расстояние до канопы уходит в минимум.</p>
+
+<table class="t">
+  <tr><th style="width:26mm;">Z, мм</th><th>Модуль C — камера роста (новая раскладка)</th><th>Комментарий</th></tr>
+  <tr><td class="b">0–60</td><td>EVA-поддон с бортом 40–60 мм + датчик протечки в нижней точке</td><td>Слив/контроль — на фронте</td></tr>
+  <tr><td class="b">60–380</td><td>Выкатная платформа: 2 горшка 15 л (Ø320), Soil Sensor Pro в каждом</td><td>Направляющие с фиксатором</td></tr>
+  <tr><td class="b">350–1150</td><td>SCROG V-рамка 700×500, 4 уровня (шаг 150–180 мм), борта 18°</td><td>Канопа ~0,65 м²</td></tr>
+  <tr class="hl"><td class="b">1250–1520</td><td>SE3000 + UV30/IR16 — рабочий диапазон на роликовых подвесах (ход ~300 мм)</td><td>Регулируется по росту канопы</td></tr>
+  <tr><td class="b">1150–1250</td><td>Рабочее расстояние свет → канопа: 250–450 мм (настраивается подсвесом)</td><td>Норма SE3000: 300–450 мм</td></tr>
+  <tr><td class="b">1520–1650</td><td>Резерв подъёма света + свободный объём омывания</td><td>—</td></tr>
+</table>
+
+<div class="warn"><b>Контроль расчёта:</b> при канопе ~1050 мм и светильнике 1250–1450 мм рабочее расстояние
+составляет 200–400 мм. Оптимум поддерживается подвесом; фиксированная высота — НЕ подходит, это и стало
+причиной замены «мотор или фиксация» на роликовые подвесы. Проверить при финальном CAD.</div>
+
+<h3>Модуль B — вертикальная раскладка</h3>
+<table class="t">
+  <tr><th style="width:26mm;">Z, мм</th><th>Модуль</th><th>Нагрузка / комментарий</th></tr>
+  <tr><td class="b">0–500</td><td>Выдвижной ящик: рабочий бак 20 л (пищевой) + кран слива + аэрация</td><td>~25 кг, Tandem 500 + усиление, поддон + датчик</td></tr>
+  <tr><td class="b">500–780</td><td>Сервисный ящик: насос полива/дозаторы, компрессор аэрации</td><td>~15 кг, шланги 4/6 мм на фронт-выводах</td></tr>
+  <tr><td class="b">780–1040</td><td>Секрет-бокс: увлажнитель SF 5 л (патрубок Ø40 в камеру)</td><td>Разнесён с электроникой</td></tr>
+  <tr><td class="b">1040–1380</td><td>Съёмная DIN-панель: GGS Controller, 2× AC10, БП, аварийный контроллер</td><td>~5 кг, сервис без инструмента</td></tr>
+  <tr><td class="b">1380–1700</td><td>Резервный бак 20 л, автодолив + механическая защита от перелива</td><td>~22 кг, полка с рамой 30×30</td></tr>
+</table>
+
+<h3>Модуль A — внутренняя компоновка (проверить по CAD!)</h3>
+<div class="flow"><b>вход из камеры C</b> → <b>фильтр SF 4"</b> (горизонтально) → <b>SF 4"</b> (виброподвесы) → <b>шумоглушитель</b> → <b>пленум</b> → <b>решётка 400×300</b> → комната</div>
+<p>Высота 300 мм — жёсткий лимит: в неё должны уместиться корпуса фильтра (Ø~250–300 мм), вентилятора
+(Ø~250 мм) и глушителя. Критерий проверки: габариты конкретных ревизий SF4/фильтра + виброподвесы +
+зазоры. Если не умещается — два решения: (а) фильтр остаётся в камере C под потолком (как в v3.0),
+в модуле A — только SF4 + глушитель + пленум; (б) модуль A увеличивается до 350 мм, но тогда
+рабочая высота камеры падает ещё на 50 мм и подвес света становится обязателен.</p>
+
+<!-- ================= 04 GROW CHAMBER ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">04</span>Камера роста — детально</h2>
+<p class="lead">Камера роста — сердце системы: здесь живут растения, и всё остальное подчинено им.
+Три подсистемы: выкатная платформа (доступ и дренаж), SCROG (геометрия канопы) и свет
+(регулируемая высота). Ниже — каждая из них полностью.</p>
+
+<table class="fig-row"><tr>
+  <td><img src="img/render_cut.png" style="width:54mm; border:1px solid #e2e4e8; border-radius:1.5mm;"><div class="cap">Разрез (модель v3.0 — база для адаптации)</div></td>
+  <td><img src="img/render_side.png" style="width:54mm; border:1px solid #e2e4e8; border-radius:1.5mm;"><div class="cap">Боковой вид</div></td>
+  <td><img src="img/render_top.png" style="width:54mm; border:1px solid #e2e4e8; border-radius:1.5mm;"><div class="cap">Вид сверху</div></td>
+</tr></table>
+
+<h3>Выкатная платформа</h3>
+<table class="t">
+  <tr><th>Элемент</th><th>Решение</th><th>Требование</th></tr>
+  <tr><td>Направляющие</td><td>Усиленные, полного выдвижения, с фиксатором от случайного выдвижения</td><td>Запас по нагрузке: 2 горшка 15 л мокрые ≈ 45–50 кг</td></tr>
+  <tr><td>Платформа</td><td>Сетчатая решётка-подставка (дренаж + обдув корней снизу), регулировка высоты ~240 мм</td><td>Горшок и поддон вентилируются, вода не стоит</td></tr>
+  <tr><td>Поддон</td><td>EVA-коврик с бортом 40–60 мм по периметру платформы</td><td>Влагостойкий, моется, съёмный</td></tr>
+  <tr><td>Датчик протечки</td><td>В нижней точке поддона, провод в сервисный канал</td><td>Сигнал → независимый hard-off (раздел 11)</td></tr>
+  <tr><td>Дренаж</td><td>Слив с платформы в поддон; контроль уровня — визуально с фронта</td><td>Без шлангов через дверной проём</td></tr>
+</table>
+
+<h3>SCROG и растения</h3>
+<table class="two-col"><tr><td>
+<ul class="tight">
+  <li><b>2 растения</b>, горшки 15 л (Ø320), по одному Soil Sensor Pro в каждый — данные не усредняются, каждое растение получает собственную обратную связь</li>
+  <li><b>V-рамка 700×500</b> на кронштейнах к боковинам, борта 18°, эффективная канопа ~0,65 м²</li>
+  <li><b>4 уровня SCROG</b> с шагом 150–180 мм; конкретные отметки уточняются после финальной высоты горшков и светильника</li>
+</ul>
+</td><td>
+<ul class="tight">
+  <li><b>SensorPro — в зоне канопы</b> (не просто «в шкафу»): он главный климатический сенсор, по нему работают VPD- и PAR-сценарии</li>
+  <li><b>Обдув: 2–3 вентилятора Spider Farmer</b> на магнитных/профильных креплениях — регулировка высоты и угла без сверления корпуса; задача — мягкое перемешивание, не струя в растения</li>
+  <li><b>Зелёная подсветка 520–540 нм</b> — работа в тёмной фазе без сбоя цикла</li>
+</ul>
+</td></tr></table>
+
+<h3>Свет</h3>
+<table class="t">
+  <tr><th style="width:36mm;">Параметр</th><th>Решение</th></tr>
+  <tr><td class="b">Основной свет</td><td>Spider Farmer SE3000: 300 Вт, PPF 856 µmol/s, PPE 2.85, 603×585×71 мм</td></tr>
+  <tr><td class="b">Подвес</td><td>Роликовые подвесы (rope ratchet) с ходом ~300 мм; моторизованный актуатор убран — меньше точек отказа и кабельных проблем, регулировка сохранена</td></tr>
+  <tr><td class="b">UV / IR</td><td>UV30 + IR16 (бары 600 мм) по бокам вдоль глубины, на одной высоте с SE3000; управление по расписанию через AC10 — без сложной самописной логики: UV — последние 2–3 недели цветения, IR — рассвет/закат ±15 мин</td></tr>
+  <tr><td class="b">Драйвер</td><td>Если конструкция светильника позволяет безопасно вынести драйвер по требованиям производителя — размещать в техническом объёме (модуль B), чтобы не греть камеру. Иначе остаётся на светильнике</td></tr>
+  <tr><td class="b">Управление</td><td>GGS/AC10: расписание + автодиммирование по PAR/DLI от SensorPro</td></tr>
+</table>
+
+<!-- ================= 05 ОБОРУДОВАНИЕ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">05</span>Оборудование Spider Farmer — состав</h2>
+<p class="lead">Управление и климатическая экосистема — полностью Spider Farmer GGS. Механика, корпус,
+электробезопасность, аварийная защита, вода и шумоизоляция — собственная инженерная часть проекта.
+Такая граница осознанная: «100% Spider Farmer до каждого болта» привела бы к странным компромиссам,
+а вот «GGS — единый мозг» — это выполнимо и уже подтверждено актуальной линейкой.</p>
+
+<table class="cards">
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/se3000.jpg">
+      <div class="card-name">Spider Farmer SE3000</div>
+      <div class="card-tag">Основной свет</div>
+      <div class="card-spec"><b>300 Вт</b> · PPF 856 µmol/s · PPE 2.85 · 603×585×71 мм · покрытие до 90×90 см · диммирование 0–100% · управление GGS/приложение</div>
+      <div class="card-role">В камере 796×620 висит с зазорами ~96 мм по бокам — радиаторы омываются со всех сторон. На роликовых подвесах, высота регулируется по росту канопы.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/uvir.jpg">
+      <div class="card-name">UV30 + IR16 (UVR-бар)</div>
+      <div class="card-tag">Спектральное дополнение</div>
+      <div class="card-spec"><b>UV-A 365 нм · IR 730 нм</b> · бары 600 мм · крепление по бокам вдоль глубины камеры</div>
+      <div class="card-role">Отдельные вспомогательные каналы с простым расписанием: UV — последние 2–3 недели цветения, IR — рассвет/закат ±15 мин. Работают через AC10, без самописной логики.</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/fan4.jpg">
+      <div class="card-name">Вентилятор SF 4" (Ø100)</div>
+      <div class="card-tag">Воздушный тракт</div>
+      <div class="card-spec"><b>до ~220 м³/ч</b> · рабочие 80–135 м³/ч (35–50%) · климатические триггеры T/RH · минимум оборотов ночью</div>
+      <div class="card-role">Один нормальный управляемый канальный вентилятор вместо батареи компьютерных вентиляторов. Размещён в модуле A на виброподвесах. Перед закупкой — подтвердить ревизию с совместимым управлением GGS/RJ12 (не по внешнему виду разъёма!).</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/ventkit4.jpg">
+      <div class="card-name">Угольный фильтр SF 4" + шумоглушитель</div>
+      <div class="card-tag">Фильтрация и тишина</div>
+      <div class="card-spec"><b>Ø100 мм</b> · фильтр — строго ДО вентилятора · после вентилятора — мягкий акустический участок и большой выходной пленум</div>
+      <div class="card-role">Фильтр и вентилятор спрятаны внутри верхнего модуля — снаружи не видно. Сервисная замена угля — сверху/спереди, без разборки камеры. Цель тракта — не максимум CFM, а тихий стабильный поток без резких сужений.</div>
+    </div>
+  </td>
+</tr>
+</table>
+
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">05</span>Оборудование Spider Farmer <span style="font-size:10pt; color:#9aa0a6; font-weight:normal;">· управление и датчики</span></h2>
+
+<table class="cards">
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/ggs.jpg">
+      <div class="card-name">GGS Controller</div>
+      <div class="card-tag">Главный мозг</div>
+      <div class="card-spec"><b>Экран + приложение</b> · расписания, триггеры, графики · порты RJ12 для устройств и датчиков</div>
+      <div class="card-role">Единственная точка настройки всего normal-control. Питание — постоянная группа с ИБП 600 ВА. Sonoff / Tuya / ESP32 в обычном режиме не участвуют.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/ac10.jpg">
+      <div class="card-name">GGS AC10 ×2</div>
+      <div class="card-tag">Умные розетки</div>
+      <div class="card-spec"><b>20 розеток суммарно</b> · индивидуальный контроль каналов · датчик T/RH в комплекте</div>
+      <div class="card-role">Управление не только вкл/выкл, но и параметрами совместимых SF-устройств (скорость вентилятора, диммирование). Перед закупкой — подтвердить ревизию и количество доступных каналов.</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/sensorpro.png">
+      <div class="card-name">GGS SensorPro</div>
+      <div class="card-tag">5-в-1 климатический сенсор</div>
+      <div class="card-spec"><b>CO₂ + PAR + T + RH + VPD</b> · расчёт DLI · автодимм света по PAR · триггеры климата</div>
+      <div class="card-role">Главный климатический датчик проекта (а не «ещё один термометр»). Размещается в зоне канопы. Дополнительные датчики — только если реально нужны.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/soil.jpg">
+      <div class="card-name">Soil Sensor Pro ×2</div>
+      <div class="card-tag">Датчики почвы</div>
+      <div class="card-spec"><b>Влажность (VWC) + EC + температура</b> · по одному на каждый горшок 15 л · подключение к GGS</div>
+      <div class="card-role">Каждое растение — своя обратная связь, показания не усредняются. Данные — вход для автоматического полива. Spider Farmer заявляет подключение нескольких таких датчиков — проверить на конкретной ревизии.</div>
+    </div>
+  </td>
+</tr>
+</table>
+
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">05</span>Оборудование Spider Farmer <span style="font-size:10pt; color:#9aa0a6; font-weight:normal;">· климат, полив, опции</span></h2>
+
+<table class="cards">
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/humid.jpg">
+      <div class="card-name">Увлажнитель SF 5 л</div>
+      <div class="card-tag">Климат</div>
+      <div class="card-spec"><b>5 л</b> · триггер RH/VPD · патрубок Ø40 из секрет-бокса в камеру</div>
+      <div class="card-role">Физически разнесён с электроникой: аэрозоль и плата — плохое соседство. Учитывать: при жёсткой воде ультразвук даёт минеральный налёт — режим обслуживания (очистка) входит в регламент.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/drip.jpg">
+      <div class="card-name">Полив: SF Smart Drip / GGS-контур</div>
+      <div class="card-tag">Полив по почвенным данным</div>
+      <div class="card-spec"><b>Автополив по VWC</b> · до 12 периодов полива в сутки · рабочий бак 20 л + резерв 20 л</div>
+      <div class="card-role">Предпочтительный путь — Spider Farmer Smart Drip, если выбранная версия действительно совместима с AC10 и Soil Sensor и доступна в регионе. Если нет — остаётся проверенная перистальтика (это отдельный сервисный контур, не «анти-GGS»).</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/irac.png">
+      <div class="card-name">IR AC Companion <span style="font-size:8pt; color:#9aa0a6;">(опция)</span></div>
+      <div class="card-tag">Летний сценарий</div>
+      <div class="card-spec"><b>ИК-управление сплитом</b> · автоматическое охлаждение по температуре · интеграция в GGS без новых кабелей</div>
+      <div class="card-role">Открытый вопрос: есть ли сплит-кондиционер в спальне. Если да — летний сценарий охлаждения закрывается без единого нового провода.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card" style="border-top-color:#e8a33d;">
+      <div style="height:40mm; background:#f6f7f9; border-radius:1.5mm; padding:4mm;">
+        <div style="font-size:9pt; color:#40464f;"><b>Не Spider Farmer — и это осознанно:</b></div>
+        <ul class="tight" style="font-size:8.4pt; color:#40464f;">
+          <li>pH/EC-дозирование — отдельный специализированный контур (GGS не химический контроллер)</li>
+          <li>ИБП 600 ВА, аварийный контроллер (watchdog / hard-off)</li>
+          <li>Камера Wi-Fi (модель уточняется), датчик протечки, зелёная LED-полоса</li>
+          <li>Механика: роликовые подвесы, направляющие платформы, стяжки, замок</li>
+        </ul>
+      </div>
+      <div class="card-name">Собственная инженерная часть</div>
+      <div class="card-tag">Граница экосистемы</div>
+      <div class="card-role">Всё, что можно автоматизировать — внутри GGS. Всё, что отвечает за механику, воду, электробезопасность и аварийную защиту — наш инженерный слой.</div>
+    </div>
+  </td>
+</tr>
+</table>
+
+<!-- ================= 06 GGS СЦЕНАРИИ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">06</span>GGS — архитектура управления и сценарии</h2>
+<p class="lead">Принцип v3.1 rev.2: normal-control выполняет GGS. ESP32, Sonoff и Tuya не участвуют в обычной
+работе; если дополнительный микроконтроллер вообще используется, его роль — мониторинг и аварийная
+логика, а не параллельный мозг. Одна точка настройки — приложение/экран GGS.</p>
+
+<h3>Распределение устройств</h3>
+<table class="t">
+  <tr><th>Устройство</th><th>Функция</th><th>Принцип работы</th></tr>
+  <tr><td class="b">GGS Controller</td><td>Центральное управление</td><td>Расписания, триггеры, графики, удалённый доступ</td></tr>
+  <tr><td class="b">SensorPro</td><td>Климат / VPD / PPFD / CO₂</td><td>Размещён в зоне канопы; база для всех климатических сценариев</td></tr>
+  <tr><td class="b">Soil Sensor ×2</td><td>Почва (VWC / EC / T)</td><td>По одному на растение; вход для полива</td></tr>
+  <tr><td class="b">SE3000</td><td>Основной свет</td><td>Расписание + автодимм по PAR/DLI</td></tr>
+  <tr><td class="b">UV30 / IR16</td><td>Спектральные добавки</td><td>Простое расписание (этап цветения / рассвет-закат)</td></tr>
+  <tr><td class="b">SF 4"</td><td>Вытяжка</td><td>Триггеры T/RH + минимум ночью; аварийный максимум при перегреве</td></tr>
+  <tr><td class="b">Обдув ×2–3</td><td>Перемешивание воздуха</td><td>Постоянно/по климату, малые обороты</td></tr>
+  <tr><td class="b">Увлажнитель</td><td>Влажность</td><td>Триггер RH/VPD</td></tr>
+  <tr><td class="b">Drip pump</td><td>Полив</td><td>Почвенная обратная связь (Soil Sensor) + расписание</td></tr>
+</table>
+
+<h3>Сценарии автоматики</h3>
+<table class="t">
+  <tr><th style="width:34mm;">Сценарий</th><th>Условие</th><th>Действие</th></tr>
+  <tr><td class="b">Свет — день</td><td>Расписание фотопериода</td><td>SE3000 включается с мягким стартом, яркость по целевому PAR</td></tr>
+  <tr><td class="b">Автодимм</td><td>PAR/DLI от SensorPro</td><td>Диммер SE3000 держит целевой PPFD; DLI считается автоматически</td></tr>
+  <tr><td class="b">Рассвет / закат</td><td>±15 мин к краям светового дня</td><td>IR16 включается на переходах (по расписанию)</td></tr>
+  <tr><td class="b">UV — финиш</td><td>Последние 2–3 недели цветения</td><td>UV30 по расписанию, лимитированное время</td></tr>
+  <tr><td class="b">VPD-контроль</td><td>VPD вне целевого диапазона</td><td>Увлажнитель по триггеру; вентиляция — минимум, чтобы не сушить</td></tr>
+  <tr><td class="b">Температура</td><td>T выше нормы</td><td>SF4 плавно повышает обороты; обдув — на максимум перемешивания</td></tr>
+  <tr><td class="b">Ночь</td><td>Тёмная фаза</td><td>SF4 — на минимум (тишина!), обдув малые обороты, зелёная подсветка для работы</td></tr>
+  <tr><td class="b">Полив</td><td>VWC в горшке ниже порога</td><td>Drip pump: импульс по расписанию/по данным; бак 20 л контролируется визуально</td></tr>
+  <tr><td class="b">Автодолив</td><td>Уровень рабочего бака низкий</td><td>Подача из резервного бака 20 л, механическая защита от перелива</td></tr>
+</table>
+
+<div class="note"><b>Чего в сценариях нет намеренно:</b> сложной самописной логики «если-то» поверх GGS.
+Если сценарий нельзя выразить средствами GGS — он либо упрощается, либо уходит в отдельный
+сервисный контур (как pH/EC). Это и есть смысл фразы «GGS — единый мозг».</div>
+
+<!-- ================= 07 ВОДА ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">07</span>Вода, полив и дозирование</h2>
+
+<h3>Два бака — физически разделённые</h3>
+<table class="two-col"><tr><td>
+<div class="mod-card" style="margin-bottom:2mm;">
+  <div class="ms">Рабочий бак</div>
+  <div class="mt">20 л · модуль B, выдвижной ящик</div>
+  <p>Пищевой пластик, кран для слива, визуальный контроль уровня, поддон с датчиком протечки.
+  Отсюда — полив растений и подача на увлажнитель (через свой контур).
+  Доступ — спереди, без инструмента.</p>
+</div>
+</td><td>
+<div class="mod-card" style="margin-bottom:2mm;">
+  <div class="ms">Резервный бак</div>
+  <div class="mt">20 л · модуль B, верхняя полка</div>
+  <p>Автодолив рабочего бака гравитацией/насосом, механическая защита от перелива
+  (поплавковый клапан 3/4"). Резерв закрывает 1–2 недели автономности. Полка — с рамой 30×30
+  (нагрузка ~22 кг).</p>
+</div>
+</td></tr></table>
+
+<h3>Полив и дозирование — разные контуры</h3>
+<table class="t">
+  <tr><th style="width:38mm;">Контур</th><th>Решение</th><th>Логика</th></tr>
+  <tr><td class="b">Полив</td><td>Spider Farmer Smart Drip (предпочтительно) или перистальтический насос</td><td>По данным 2× Soil Sensor (VWC) + расписание; шланги 4/6 мм через сервисный канал</td></tr>
+  <tr><td class="b">Доза питания A / B / микро</td><td>Отдельный сервисный контур (перистальтика), не GGS</td><td>По EC и фазе роста; Smart Drip поливает, но не дозирует — это разные задачи</td></tr>
+  <tr><td class="b">pH-коррекция</td><td>Отдельный специализированный контур, опционально</td><td>GGS не превращается в самописный химический контроллер; если полная автоматика pH не нужна — ручной режим с контролем</td></tr>
+  <tr><td class="b">Аэрация</td><td>Тихий компрессор (аквариумный) в сервисном ящике</td><td>Таймер 15 мин/час; на коврике — виброразвязка</td></tr>
+  <tr><td class="b">Дренаж</td><td>Слив с платформы в поддон, контроль — визуально + датчик</td><td>Никаких шлангов через дверной проём</td></tr>
+</table>
+
+<div class="warn"><b>Проверка перед закупкой:</b> наличие Spider Farmer Smart Drip в вашем регионе и подтверждённая
+совместимость с выбранной ревизией AC10 + Soil Sensor. Если не подтверждена — комплектуем перистальтику
+(3 насоса + pH) в сервисный ящик модуля B. Оба варианта укладываются в одну и ту же механику шкафа.</div>
+
+<!-- ================= 08 ЭЛЕКТРИКА ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">08</span>Электрика: слои и карта каналов</h2>
+
+<h3>Разделение трасс — четыре слоя</h3>
+<div class="flow"><b>POWER</b> — AC10, нагрузки, защита &nbsp;|&nbsp; <b>LOW VOLTAGE</b> — RJ12, датчики, USB &nbsp;|&nbsp; <b>WATER</b> — шланги, бак, слив &nbsp;|&nbsp; <b>SAFETY</b> — leak sensor, hard-off, watchdog</div>
+<p>Все четыре слоя физически разведены в двойной задней стенке (сервисный канал 80–100 мм) и по модулям.
+Силовые линии, RJ12/датчики и водяные магистрали не лежат в одной куче. Снаружи не видно ничего —
+все провода за задней стенкой, один силовой кабель наружу.</p>
+
+<h3>Карта каналов (2× AC10, 20 розеток)</h3>
+<div class="danger" style="margin-top:0;"><b>Важно:</b> силовые соединения, автоматы/защита и заземление выполняются по требованиям
+местных норм и квалифицированным специалистом. Этот документ задаёт архитектуру, а не заменяет
+электрический проект.</div>
+<table class="t">
+  <tr><th style="width:18mm;">Канал</th><th>Устройство</th><th>Режим</th></tr>
+  <tr><td class="b">1</td><td>Свет SE3000 (драйвер)</td><td>расписание + автодимм по PAR/DLI</td></tr>
+  <tr><td class="b">2</td><td>Вентилятор SF 4"</td><td>триггеры T/RH, минимум ночью, аварийный максимум</td></tr>
+  <tr><td class="b">3</td><td>Обдув (2–3 вентилятора, шина 12 В)</td><td>постоянно / по климату</td></tr>
+  <tr><td class="b">4</td><td>Увлажнитель SF 5 л</td><td>триггер RH/VPD</td></tr>
+  <tr><td class="b">5</td><td>Насос полива (Smart Drip / перистальтика)</td><td>по Soil Sensor + расписанию</td></tr>
+  <tr><td class="b">6</td><td>Компрессор аэрации</td><td>таймер (15 мин/час)</td></tr>
+  <tr><td class="b">7</td><td>UV30</td><td>последние 2–3 недели цветения</td></tr>
+  <tr><td class="b">8</td><td>IR16</td><td>рассвет/закат ±15 мин</td></tr>
+  <tr><td class="b">9–11</td><td>Дозатор A / B / микро (если перистальтика)</td><td>сервисный контур, по EC/фазе</td></tr>
+  <tr><td class="b">12</td><td>pH-насос (опционально)</td><td>сервисный контур, вручную/по датчику</td></tr>
+  <tr><td class="b">13–20</td><td>Резерв (обогрев, осушитель, IR AC Companion, сервис)</td><td>—</td></tr>
+</table>
+
+<h3>Постоянная группа (вне AC10)</h3>
+<ul class="tight">
+  <li><b>GGS Controller + блоки питания</b> — всегда в работе</li>
+  <li><b>ИБП 600 ВА</b> — держит Controller + 2 канала AC10 + камеру (~20 Вт) в течение 2–4 ч; при пропадании сети — безопасный последний режим</li>
+  <li><b>Аварийный контроллер (watchdog / hard-off)</b> — независимый слой безопасности (раздел 09)</li>
+  <li><b>Камера Wi-Fi</b> (модель уточняется) — ИК-подсветка ночью отключается, чтобы не светить в камеру роста</li>
+</ul>
+
+<!-- ================= 09 БЕЗОПАСНОСТЬ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">09</span>Безопасность — независимый слой</h2>
+<p class="lead">Главный принцип: аварийная логика не должна зависеть от «мозга». Если GGS зависнет, потеряется
+сеть или выйдет из строя датчик — шкаф обязан уйти в безопасное состояние, а не продолжать качать воду.
+Аварийный контур — физически отдельная цепь (реле + простой контроллер/watchdog) с минимальной логикой.</p>
+
+<h3>Аварийные сценарии</h3>
+<table class="t">
+  <tr><th style="width:32mm;">Событие</th><th>Немедленное действие</th><th>Почему так</th></tr>
+  <tr><td class="b">Протечка (EVA-поддон)</td><td>Hard-off: насос полива OFF + увлажнитель OFF; вентиляция остаётся доступной</td><td>Источник воды отсекается первым; вентиляция — безопасная нагрузка</td></tr>
+  <tr><td class="b">Переполнение / перелив</td><td>Подача воды OFF (поплавок + датчик уровня)</td><td>Механика + электрика дублируют друг друга</td></tr>
+  <tr><td class="b">Перегрев</td><td>SF4 → аварийный максимум; обдув → максимум</td><td>Сначала снять температуру, потом разбираться</td></tr>
+  <tr><td class="b">Потеря датчика</td><td>Оборудование переходит в заранее определённый безопасный режим</td><td>Нет данных — нет агрессивных действий</td></tr>
+  <tr><td class="b">Потеря связи GGS</td><td>Watchdog: безопасный последний режим; никакого бесконечного «ON» для насоса и увлажнителя</td><td>Деградация — в сторону выключения, а не работы вслепую</td></tr>
+  <tr><td class="b">Пропадание сети</td><td>ИБП держит Controller + критичные каналы 2–4 ч; при разряде — штатное выключение</td><td>Время на реакцию, отсутствие «пилы» включений</td></tr>
+</table>
+
+<h3>Что входит в safety-слой</h3>
+<table class="two-col"><tr><td>
+<ul class="tight">
+  <li><b>Датчик протечки</b> в нижней точке EVA-поддона (модуль C) + под баком (модуль B)</li>
+  <li><b>Hard-off реле</b> на контурах насоса и увлажнителя — физический разрыв, не «программа»</li>
+  <li><b>Watchdog-контроллер</b> с питанием от ИБП; контролирует heartbeat GGS и датчики</li>
+</ul>
+</td><td>
+<ul class="tight">
+  <li><b>Поплавковый клапан</b> 3/4" на резервном баке — механическая защита от перелива</li>
+  <li><b>Влагозащищённые розетки с крышками</b> в зоне баков</li>
+  <li><b>Раздельные слои</b> power / low-voltage / water — вода физически не попадает на силовые клеммы</li>
+</ul>
+</td></tr></table>
+
+<!-- ================= 10 АКУСТИКА ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">10</span>Акустика, свет и запах</h2>
+
+<h3>Воздушный тракт — расчёт и принципы</h3>
+<table class="t">
+  <tr><th>Параметр</th><th>Значение</th><th>Комментарий</th></tr>
+  <tr><td>Объём камеры</td><td class="b">~0,85–0,9 м³</td><td>Расчётный воздухообмен 80–135 м³/ч</td></tr>
+  <tr><td>Вентилятор SF 4"</td><td class="b">до ~220 м³/ч</td><td>Рабочий режим 35–50% — запас есть; цель — не CFM, а тихий стабильный поток</td></tr>
+  <tr><td>Разрежение</td><td class="b">обязательно</td><td>Сечение притока &gt; вытяжного; фильтр строго ДО вентилятора</td></tr>
+  <tr><td>Приток</td><td class="b">лабиринт внизу двери</td><td>Широкий, без резких сужений; «антисвет/антипыль» на входе</td></tr>
+  <tr><td>Выход</td><td class="b">пленум + решётка 400×300</td><td>Большая площадь решётки снижает скорость струи и аэродинамический шум</td></tr>
+</table>
+
+<h3>Программа тишины</h3>
+<table class="two-col"><tr><td>
+<ul class="tight">
+  <li><b>Верхний модуль A:</b> все шумные элементы в одном изолированном объёме с вибро/шумо/звукоизоляцией</li>
+  <li><b>Сэндвич стен и двери:</b> ЛДСП 18 → MLV 2–3 мм → минвата 20–30 мм → обшивка (≈51 мм)</li>
+  <li><b>Виброразвязка:</b> SF4 на виброподвесах, помпа/компрессор на ковриках, демпферные опоры корпуса 60 мм</li>
+  <li><b>Мягкие участки тракта:</b> минимум 1–2 гибких вставки, длинный тихий участок после вентилятора</li>
+</ul>
+</td><td>
+<img src="img/noise.jpg" style="width:78mm; border:1px solid #e2e4e8; border-radius:1.5mm;">
+<div class="cap" style="font-size:8pt; color:#6b7078; margin:1.5mm 0 2mm 0;">Уровень шума вентилятора SF 4" (по данным производителя)</div>
+<div class="note" style="margin:0;"><b>Приёмка:</b> замер шума у изголовья в ночном режиме — цель «не слышно во сне». Blackout test двери и порогов — отдельный пункт чек-листа.</div>
+</td></tr></table>
+
+<h3>Свето- и запахонепроницаемость</h3>
+<ul class="tight">
+  <li><b>Двери:</b> Push-to-Open Blum, уплотнитель по периметру, нахлёст-планки, порожек, лабиринт притока — щели исключены</li>
+  <li><b>Индикаторы электроники</b> — только внутри модуля B; ночью ничего не светит наружу</li>
+  <li><b>Запах:</b> угольный фильтр в контуре разрежения + уплотнение стыков модулей; тест — «нюх-тест» по периметру</li>
+  <li><b>Внутреннее покрытие камеры:</b> матовая белая светоотражающая плёнка (~98% отражения), моется</li>
+</ul>
+
+<!-- ================= 11 МЕБЕЛЬ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">11</span>Мебельная конструкция и фурнитура</h2>
+
+<h3>Экстерьер — «абсолютный стелс»</h3>
+<table class="t">
+  <tr><th style="width:42mm;">Элемент</th><th>Решение</th></tr>
+  <tr><td class="b">Внешний вид</td><td>Матовый декор ЛДСП (базовый — «Серый уголь»; цвет под комнату — по выбору), длинные мебельные линии, ни одной видимой решётки или провода</td></tr>
+  <tr><td class="b">Двери</td><td>Двустворчатая дверь камеры (петли Blum Clip ×5) + фасады модулей; открывание Push-to-Open — снаружи нет ручек</td></tr>
+  <tr><td class="b">Замок</td><td>Скрытый электронный замок (опционально) — доступ только у владельца; механический аварийный ключ-шпингалет</td></tr>
+  <tr><td class="b">Верхний фасад модуля A</td><td>На двух газлифтах — сервис к фильтру/вентилятору сверху</td></tr>
+  <tr><td class="b">Ящики</td><td>3 усиленных выкатных (Blum Tandem 500 + доводчики), нагрузка до ~25 кг</td></tr>
+  <tr><td class="b">Задняя стенка</td><td>Двойная: наружная + внутренняя, между ними сервисный канал 80–100 мм (power / low-voltage / water разведены)</td></tr>
+  <tr><td class="b">Стяжки</td><td>Скрытые межсекционные мебельные стяжки, по 2–4 на стык; стыки с уплотнителем</td></tr>
+  <tr><td class="b">Опоры</td><td>4× демпферные 60 мм (пробка/каучук) — виброразвязка с полом</td></tr>
+</table>
+
+<h3>Материалы</h3>
+<table class="t">
+  <tr><th>Элемент</th><th>Материал</th><th>Требования</th></tr>
+  <tr><td>Наружные панели и фасады</td><td>ЛДСП 18 мм, матовый декор</td><td>Кромки ABS проклеены, мебельный вид</td></tr>
+  <tr><td>Стенки мокрой зоны / поддоны</td><td>Фанера 15–18 мм + моющееся покрытие; EVA-коврики</td><td>Торцы, сверловка, шканты — герметизация (смола/краска/силант)</td></tr>
+  <tr><td>Акустический сэндвич</td><td>ЛДСП/фанера → MLV 2–3 мм → минвата 20–30 мм → обшивка</td><td>Дверь двойная, без пустот</td></tr>
+  <tr><td>Фурнитура</td><td>Blum TANDEM / CLIP / AVENTOS, газлифты, Push-to-Open</td><td>Тихое закрывание, доводчики</td></tr>
+  <tr><td>Внутри камеры</td><td>Матовая белая светоотражающая плёнка (~98%)</td><td>Моется, не выгорает</td></tr>
+</table>
+
+<!-- ================= 12 РАСКРОЙ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">12</span>Предварительная карта раскроя</h2>
+<p class="lead">Карта адаптирована от v3.0 под модульную конструкцию. Размеры модульных перегородок, верхнего
+модуля и элементов двойной задней стенки будут уточнены после финального CAD — это нормально,
+раскрой стартует только после проверки BBox.</p>
+<div class="note"><b>Раскладка листов:</b> ориентировочно 2 листа ЛДСП 2800×2070 + остатки на ящики.
+Самая длинная деталь — дверь (822×1700 в модульной версии), раскрой начинать с неё.
+Все торцы ЛДСП и сверловка герметизируются — обязательное условие для мокрой зоны.</div>
+
+<table class="t">
+  <tr><th style="width:8mm;">№</th><th>Деталь</th><th>Размеры Д×В×Т, мм (предв.)</th><th style="width:12mm;">Кол-во</th><th>Материал</th></tr>
+  <tr><td class="b">1–2</td><td>Боковина левая / правая (модуль B+C)</td><td>700 × 1700 × 18</td><td class="c">2</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">3</td><td>Дно (B+C)</td><td>1214 × 700 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">4</td><td>Перегородка B/C (сервисные прорези)</td><td>620 × 1700 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">5</td><td>Крышка модуля A / полка-перекрытие</td><td>1214 × 700 × 18</td><td class="c">2</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">6</td><td>Корпус модуля A (боковины + торцы)</td><td>по CAD (высота 300)</td><td class="c">1 к-т</td><td>ЛДСП 18 + изоляция</td></tr>
+  <tr><td class="b">7–8</td><td>Задняя стенка внутренняя B / C</td><td>418 / 796 × 1700 × 12</td><td class="c">2</td><td>Фанера 12</td></tr>
+  <tr><td class="b">9–10</td><td>Задняя стенка наружная (двойная стенка)</td><td>1214 × 1700 × 8</td><td class="c">2</td><td>Оргалит 8</td></tr>
+  <tr><td class="b">11</td><td>Дверь камеры (петли Blum ×5, Push-to-Open)</td><td>822 × 1700 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">12–14</td><td>Фасады: ящик бака / ящик сервиса / секрет-бокс</td><td>428 × 500 / 280 / 260 × 18</td><td class="c">3</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">15–16</td><td>Фасад верхний (модуль B, на газлифтах) / фасад модуля A</td><td>428 × 320 / 1250 × 300 × 18</td><td class="c">2</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">17</td><td>Полка резервного бака + рама 30×30</td><td>400 × 620 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">18</td><td>Панель электроники (съёмная DIN)</td><td>400 × 340 × 10</td><td class="c">1</td><td>Фанера 10</td></tr>
+  <tr><td class="b">19</td><td>Дно платформы выкатной (сетка + рама)</td><td>по CAD (~750 × 590)</td><td class="c">1</td><td>Металл / фанера</td></tr>
+  <tr><td class="b">20</td><td>Ящики (комплекты с направляющими)</td><td>374 × 550 × 470 / 240 / 240</td><td class="c">3</td><td>ЛДСП 12 + Tandem 500</td></tr>
+</table>
+
+<!-- ================= 13 ПЕРЕД CAD ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">13</span>Подготовка к финальному CAD</h2>
+<p class="lead">Проект перешёл из стадии «идеи» в стадию «концепция перед CAD». Перед тем как резать материал
+или перестраивать 3D-модель, нужно закрыть восемь проверок. Это не бюрократия — каждая из них
+однажды уже экономила проект от брака.</p>
+
+<h3>Чек-лист проверок</h3>
+<table class="t">
+  <tr><th style="width:8mm;">№</th><th>Проверка</th><th>Критерий готовности</th></tr>
+  <tr><td class="b">①</td><td>Зафиксировать внешний BBox и реальные размеры модулей</td><td>Расхождение канон/модель v3.0 устранено; размеры модулей A/B/C записаны</td></tr>
+  <tr><td class="b">②</td><td>Проверить: помещаются ли фильтр + SF4 + глушитель в верхние 300 мм</td><td>Габариты конкретных ревизий + виброподвесы + зазоры; иначе — план «Б» (фильтр в C)</td></tr>
+  <tr><td class="b">③</td><td>Зафиксировать тип направляющих выкатной платформы и допустимую нагрузку</td><td>Запас по нагрузке ≥ 1,5 от мокрой массы горшков (~50 кг)</td></tr>
+  <tr><td class="b">④</td><td>Разнести трассы power / low-voltage / water в сервисном канале</td><td>Схема трасс в CAD, гермовводы PG-13.5/PG21, ≥150 мм от пола</td></tr>
+  <tr><td class="b">⑤</td><td>Подтвердить ревизии GGS / AC10 / SF4 и их совместимость</td><td>Реальные разъёмы и протокол управления (не по внешнему виду!)</td></tr>
+  <tr><td class="b">⑥</td><td>Проверить габариты SE3000 и точки крепления подвесов</td><td>603×585×71 мм + ход подвесов вписывается в камеру</td></tr>
+  <tr><td class="b">⑦</td><td>Определить финальную схему дренажа и автодолива</td><td>Слив с платформы, поплавок резервного бака, доступ с фронта</td></tr>
+  <tr><td class="b">⑧</td><td>Проверить тепловой режим и аварийные сценарии</td><td>Расчёт тепла светильника/драйвера + прогон safety-логики</td></tr>
+</table>
+
+<h3>Открытые вопросы</h3>
+<table class="t">
+  <tr><th style="width:8mm;">№</th><th>Вопрос</th><th>Влияние</th></tr>
+  <tr><td class="b">1</td><td><b>Smart Drip:</b> доступность в регионе и совместимость с AC10 + Soil Sensor?</td><td>Если да — полив в GGS полностью; если нет — перистальтика в сервисный ящик</td></tr>
+  <tr><td class="b">2</td><td><b>Летний сценарий:</b> есть ли сплит в спальне?</td><td>IR AC Companion — в постоянную группу и сценарии охлаждения</td></tr>
+  <tr><td class="b">3</td><td><b>Камера Wi-Fi:</b> конкретная модель</td><td>Место в секрет-боксе зарезервировано; важен режим ИК-подсветки</td></tr>
+  <tr><td class="b">4</td><td><b>Декор фасадов:</b> цвет и тип матового покрытия</td><td>Финальный выбор перед раскроем</td></tr>
+  <tr><td class="b">5</td><td><b>Замок:</b> электронный скрытый или механический шпингалет?</td><td>Отверстие в двери закладывается на этапе раскроя</td></tr>
+</table>
+
+<h3>Чек-лист монтажа</h3>
+<table class="two-col"><tr><td>
+<ul class="tight">
+  <li>Сборка модулей: B → C → A, стяжки по 2–4 на стык, уплотнитель стыков</li>
+  <li>Все торцы и сверловка — герметизация до сборки</li>
+  <li>Розетки и вводы — не ниже 150 мм от пола, гермовводы на всех трассах</li>
+  <li>Силовая рама под тяжёлые ящики (баки 25 + 22 кг)</li>
+</ul>
+</td><td>
+<ul class="tight">
+  <li>Виброподвесы SF4 и демпферные опоры 60 мм — не пропускать</li>
+  <li>Прогон safety-логики: имитация протечки → hard-off срабатывает</li>
+  <li>Тестовый прогон 4–6 ч до заселения растений</li>
+  <li>Blackout test дверей/порогов + замер шума у изголовья</li>
+</ul>
+</td></tr></table>
+
+<!-- ================= 14 ИТОГ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">14</span>Итог и файлы проекта</h2>
+
+<h3>Что такое v3.1 rev.2 в одном абзаце</h3>
+<p>Модульная мебель из трёх блоков на скрытых стяжках; верхний акустический отсек изолирует весь шум;
+камера роста — с выкатной платформой, регулируемым светом и 4 уровнями SCROG; тех-колонна несёт воду
+(20+20 л), увлажнение и всю электронику на съёмной панели; управление целиком — Spider Farmer GGS;
+вода, электрика и аварийная защита — разведённые слои с независимым hard-off контуром. Снаружи —
+серый матовый шкаф без ручек, решёток и проводов. Внутри — часы.</p>
+
+<h3>Итоговая спецификация (BOM v3.1 rev.2)</h3>
+<table class="t">
+  <tr><th>Узел</th><th>Решение</th><th>Статус</th></tr>
+  <tr><td class="b">Корпус</td><td>3 модуля (A/B/C) + скрытые межсекционные стяжки</td><td>Новый</td></tr>
+  <tr><td class="b">Задняя стенка</td><td>Двойная, сервисный канал 80–100 мм, разделение трасс</td><td>Новый</td></tr>
+  <tr><td class="b">Платформа</td><td>Выкатная + EVA-поддон + датчик протечки + фиксатор</td><td>Новый</td></tr>
+  <tr><td class="b">Механика дверей</td><td>Blum Clip + Push-to-Open, скрытый замок, без ручек</td><td>Новый</td></tr>
+  <tr><td class="b">Свет</td><td>Spider Farmer SE3000 300W на роликовых подвесах</td><td>Оставить (подвес — замена актуатору)</td></tr>
+  <tr><td class="b">UV / IR</td><td>Spider Farmer UV30 + IR16</td><td>Оставить</td></tr>
+  <tr><td class="b">Контроллер</td><td>Spider Farmer GGS</td><td>Главный мозг</td></tr>
+  <tr><td class="b">Питание</td><td>2× GGS AC10 (20 каналов)</td><td>Оставить (проверить ревизию)</td></tr>
+  <tr><td class="b">Климат</td><td>GGS SensorPro (5-в-1)</td><td>Оставить</td></tr>
+  <tr><td class="b">Почва</td><td>2× Soil Sensor Pro</td><td>Оставить</td></tr>
+  <tr><td class="b">Вытяжка</td><td>SF 4" + угольный фильтр + шумоглушитель (модуль A)</td><td>Оставить</td></tr>
+  <tr><td class="b">Обдув</td><td>2–3 Spider Farmer clip fan на магнитных креплениях</td><td>Упростить</td></tr>
+  <tr><td class="b">Полив</td><td>Spider Farmer Smart Drip / GGS-совместимый контур</td><td>Предпочтительно</td></tr>
+  <tr><td class="b">Вода</td><td>20 л рабочий + 20 л резерв, автодолив, поплавок</td><td>Оставить</td></tr>
+  <tr><td class="b">Увлажнение</td><td>Spider Farmer 5 л (секрет-бокс, патрубок в камеру)</td><td>Оставить</td></tr>
+  <tr><td class="b">Доза A/B/микро + pH</td><td>Отдельный сервисный контур (перистальтика), не GGS</td><td>Опционально</td></tr>
+  <tr><td class="b">Аэрация</td><td>Тихий компрессор (аквариумный)</td><td>Опционально</td></tr>
+  <tr><td class="b">Safety layer</td><td>Leak-sensor hard-off, watchdog, ИБП 600 ВА</td><td>Новый</td></tr>
+  <tr><td class="b">Sonoff / Tuya / ESP32</td><td>Не участвуют в normal-control</td><td>Убрать</td></tr>
+  <tr><td class="b">Моторизованный подъём света</td><td>Заменён на роликовые подвесы</td><td>Убрать</td></tr>
+</table>
+
+<h3>Файлы модели v3.0 — база для CAD-адаптации</h3>
+<table class="t">
+  <tr><th>Файл</th><th>Назначение</th></tr>
+  <tr><td class="b">growbox_v3.step</td><td>Базовая сборка (76 именованных деталей) — открыть в КОМПАС-3D, адаптировать под модульность</td></tr>
+  <tr><td class="b">growbox_v3.stl / .glb + viewer.html</td><td>Просмотр и веб-демонстрация</td></tr>
+  <tr><td class="b">build_growbox_v3.py</td><td>Исходник на CadQuery — менять размеры и пересобирать (в т.ч. разбивку на модули A/B/C)</td></tr>
+  <tr><td class="b">growbox_v3_spec.md</td><td>Спецификация v3.0: габариты, карта раскроя, электрика</td></tr>
+  <tr><td class="b">render_*.png / preview_*.svg</td><td>Рендеры и чертёжные превью (фасад, разрез, бок, верх, изометрия)</td></tr>
+</table>
+
+<table class="fig-row"><tr>
+  <td><img src="img/render_front.png" style="width:52mm; border:1px solid #e2e4e8; border-radius:1.5mm;"><div class="cap">Фасад (модель v3.0)</div></td>
+  <td><img src="img/render_side.png" style="width:52mm; border:1px solid #e2e4e8; border-radius:1.5mm;"><div class="cap">Боковой вид</div></td>
+  <td style="width:33%; vertical-align:middle; text-align:left;"><div class="note" style="margin:0;"><b>Следующий шаг:</b> закрыть 8 проверок раздела 13 — и можно перестраивать
+CAD-модель под модульную архитектуру A/B/C и отдавать проект в производство.</div></td>
+</tr></table>
+
+<div class="closing" style="page-break-inside: avoid;">
+<div class="fig">
+  <img src="img/render_iso.png" style="width: 74%;">
+  <div class="cap">Гроубокс — базовая 3D-модель v3.0 · ревизия rev.2 переходит в CAD после чек-листа раздела 13</div>
+</div>
+
+<div class="closing-band">
+  <table><tr>
+    <td><div class="cb-v">3 модуля</div><div class="cb-l">скрытые стяжки</div></td>
+    <td><div class="cb-v">GGS</div><div class="cb-l">единый мозг</div></td>
+    <td><div class="cb-v">Safety layer</div><div class="cb-l">независимый контур</div></td>
+    <td><div class="cb-v">Готово к CAD</div><div class="cb-l">после 8 проверок</div></td>
+  </tr></table>
+</div>
+<div class="small" style="margin-top:3mm; text-align:center;">Гроубокс v3.1 rev.2 · полное проектное описание · 28 сентября 2026 · концепт перед финальным CAD</div>
+</div>
+
+</body>
+</html>

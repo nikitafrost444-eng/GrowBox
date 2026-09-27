@@ -1,0 +1,11 @@
+se3000|https://www.spider-farmer.com/products/spider-farmer-upgraded-se3000-full-spectrum-led-grow-light/
+fan4|https://www.spider-farmer.com/products/spider-farmer-4-inch-quiet-inline-duct-fan-with-temperature-humidity-controller/
+ventkit4|https://www.spider-farmer.com/products/spider-farmer-ventilation-kit-4-inch-205-cfm-inline-duct-fan-with-temperature-humidity-controller-carbon-filter-32-feet-ducting-combo-set-ventilation-system-for-grow-tents-hydroponics/
+uvir|https://www.spider-farmer.com/products/spider-farmer-40w-uv-ir-led-grow-light-bar/
+ggs|https://www.spider-farmer.com/products/spider-farmer-led-grow-light-controller/
+ac10|https://www.spider-farmer.com/products/genius-grow-system-ac10-power-strip-kits-app-based-smart-controls-for-grow-room-and-tent/
+sensorpro|https://www.spider-farmer.com/products/genius-grow-system-sensor-pro-kits-co2-sensor-and-ppfd-sensor/
+soil|https://www.spider-farmer.com/products/3-in-1-soil-sensor-pro-monitoring-soil-ec-temperature-moisture/
+humid|https://www.spider-farmer.com/products/spider-farmer-cool-mist-humidifier-for-plants/
+drip|https://www.spider-farmer.com/products/spider-farmer-automatic-drip-irrigation-system-for-plants-water-pump-with-8-drip-emitters/
+irac|https://www.spider-farmer.com/products/spider-farmer-ggs-infrared-ac-companion-smart-cooling-control-indoor-grow/

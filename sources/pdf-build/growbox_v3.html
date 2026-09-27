@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Гроубокс v3.0</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 15mm 16mm 15mm;
+    @bottom-left {
+      content: "Гроубокс v3.0 · Spider Farmer GGS · 28.09.2026";
+      font-family: "Liberation Sans"; font-size: 7.5pt; color: #9aa0a6;
+    }
+    @bottom-right {
+      content: counter(page) " / " counter(pages);
+      font-family: "Liberation Sans"; font-size: 7.5pt; color: #9aa0a6;
+    }
+  }
+  @page cover { margin: 0; @bottom-left { content: ""; } @bottom-right { content: ""; } }
+
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Liberation Sans", sans-serif;
+    font-size: 9.5pt; line-height: 1.45; color: #23272e; margin: 0;
+  }
+  h1, h2, h3 { margin: 0; }
+
+  /* ---------- COVER ---------- */
+  .cover { page: cover; width: 210mm; height: 296mm; background: #14171c; color: #fff; padding: 0; position: relative; }
+  .cover-band { position: absolute; left: 0; top: 0; width: 100%; height: 8mm; background: #2f9e44; }
+  .cover-inner { padding: 26mm 18mm 0 18mm; }
+  .cover-kicker { color: #2f9e44; font-size: 11pt; letter-spacing: 2.5pt; text-transform: uppercase; margin-bottom: 6mm; }
+  .cover h1 { font-size: 42pt; line-height: 1.08; letter-spacing: -0.5pt; }
+  .cover h1 .light { color: #b9bec6; font-weight: 300; }
+  .cover-sub { font-size: 13pt; color: #c8ccd2; margin-top: 5mm; width: 150mm; line-height: 1.5; }
+  .cover-model { position: absolute; right: 4mm; top: 96mm; width: 118mm; }
+  .cover-badges { position: absolute; left: 18mm; right: 18mm; bottom: 22mm; }
+  .badge-row { width: 100%; border-collapse: collapse; }
+  .badge-row td { border-top: 1px solid #3a3f47; padding: 4mm 2mm 4mm 0; vertical-align: top; width: 25%; }
+  .badge-v { font-size: 15pt; font-weight: bold; color: #fff; }
+  .badge-l { font-size: 8pt; color: #9aa0a6; text-transform: uppercase; letter-spacing: 1pt; }
+  .cover-foot { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; color: #6b7078; font-size: 8pt; border-top: 1px solid #2a2e35; padding-top: 3mm; }
+
+  /* ---------- HEADINGS ---------- */
+  h2.sec { font-size: 17pt; color: #14171c; margin: 0 0 4mm 0; padding-bottom: 2.5mm; border-bottom: 2.5pt solid #2f9e44; }
+  h2.sec .num { color: #2f9e44; font-weight: bold; margin-right: 3mm; }
+  h3 { font-size: 11pt; color: #14171c; margin: 5mm 0 2mm 0; }
+  p { margin: 0 0 2.5mm 0; text-align: justify; }
+  .lead { font-size: 10.5pt; color: #40464f; margin-bottom: 4mm; }
+  .page-break { page-break-before: always; }
+
+  /* ---------- TABLES ---------- */
+  table.t { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm 0; font-size: 9pt; }
+  table.t th { background: #14171c; color: #fff; text-align: left; padding: 2.2mm 2.5mm; font-size: 8.6pt; text-transform: uppercase; letter-spacing: 0.5pt; }
+  table.t td { border-bottom: 1px solid #e2e4e8; padding: 2mm 2.5mm; vertical-align: top; }
+  table.t tr:nth-child(even) td { background: #f6f7f9; }
+  table.t td.c { text-align: center; }
+  table.t td.b { font-weight: bold; }
+  .hl td { background: #eaf6ec !important; }
+
+  /* ---------- EQUIPMENT CARDS ---------- */
+  .cards { width: 100%; border-collapse: separate; border-spacing: 4mm 0; margin: 3mm -4mm 2mm -4mm; }
+  .cards td { width: 50%; vertical-align: top; padding: 0 0 5mm 0; }
+  .card { border: 1px solid #e2e4e8; border-top: 3pt solid #2f9e44; border-radius: 2mm; padding: 3mm; }
+  .card-img { width: 100%; height: 42mm; object-fit: contain; background: #fff; }
+  .card-name { font-size: 11pt; font-weight: bold; color: #14171c; margin: 2mm 0 0.5mm 0; }
+  .card-tag { display: inline-block; background: #eaf6ec; color: #20733a; font-size: 7.2pt; padding: 0.6mm 2mm; border-radius: 1mm; text-transform: uppercase; letter-spacing: 0.6pt; margin-bottom: 1.5mm; }
+  .card-spec { font-size: 8.2pt; color: #40464f; margin: 0; }
+  .card-spec b { color: #14171c; }
+  .card-role { font-size: 8.2pt; color: #20733a; margin-top: 1.5mm; padding-top: 1.5mm; border-top: 1px dashed #d6d9dd; }
+
+  /* ---------- FIGURES ---------- */
+  .fig { width: 100%; margin: 3mm 0; text-align: center; }
+  .fig img { max-width: 100%; border: 1px solid #e2e4e8; border-radius: 1.5mm; }
+  .fig .cap { font-size: 8pt; color: #6b7078; margin-top: 1.5mm; }
+  .fig-row { width: 100%; border-collapse: separate; border-spacing: 3mm 0; margin: 3mm -3mm; }
+  .fig-row td { width: 33.33%; text-align: center; vertical-align: top; }
+
+  /* ---------- MISC ---------- */
+  .kv { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm 0; }
+  .kv td { padding: 1.8mm 2.5mm; border-bottom: 1px solid #e2e4e8; font-size: 9pt; }
+  .kv td.k { width: 42mm; color: #6b7078; }
+  .kv td.v { font-weight: bold; color: #14171c; }
+  .note { background: #f2f4f6; border-left: 3pt solid #2f9e44; padding: 3mm 4mm; margin: 3mm 0; font-size: 8.8pt; }
+  .warn { background: #fdf3e7; border-left: 3pt solid #e8a33d; padding: 3mm 4mm; margin: 3mm 0; font-size: 8.8pt; }
+  .zones { width: 100%; border-collapse: collapse; margin: 2mm 0; }
+  .zones td { padding: 2.2mm 3mm; font-size: 8.8pt; border-bottom: 1px solid #e2e4e8; }
+  .zones td.z1 { background: #eaf6ec; width: 34mm; font-weight: bold; color: #20733a; }
+  .zones td.z2 { width: 38mm; color: #14171c; font-weight: bold; }
+  .flow { background: #14171c; color: #e8eaed; padding: 4mm 5mm; border-radius: 2mm; margin: 3mm 0; font-size: 9pt; text-align: center; }
+  .flow b { color: #7fd99a; }
+  ul.tight { margin: 1mm 0 3mm 0; padding-left: 5mm; }
+  ul.tight li { margin-bottom: 1.2mm; }
+  .two-col { width: 100%; border-collapse: separate; border-spacing: 4mm 0; margin: 0 -4mm; }
+  .two-col td { width: 50%; vertical-align: top; }
+  .small { font-size: 8pt; color: #6b7078; }
+  .card, .note, .warn, .fig, .flow, tr { page-break-inside: avoid; }
+  .closing-band { background: #14171c; color: #fff; border-radius: 2mm; padding: 5mm 6mm; margin-top: 4mm; }
+  .closing-band table { width: 100%; border-collapse: collapse; }
+  .closing-band td { border-top: 1px solid #3a3f47; padding: 2.5mm 2mm 0 0; vertical-align: top; width: 25%; }
+  .cb-v { font-size: 12pt; font-weight: bold; color: #fff; }
+  .cb-l { font-size: 7.5pt; color: #9aa0a6; text-transform: uppercase; letter-spacing: 1pt; }
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="cover-band"></div>
+  <div class="cover-inner">
+    <div class="cover-kicker">Проект · Мебель под заказ · v3.0</div>
+    <h1>ГРОУБОКС<br><span class="light">премиальная тишина</span></h1>
+    <div class="cover-sub">Тихий гроушкаф для 2 растений (SCROG) в спальне:<br>
+    выглядит как мебель · звучит как тишина · работает как часы<br>
+    Единая экосистема Spider Farmer GGS</div>
+    <img class="cover-model" src="img/render_iso.png">
+  </div>
+  <div class="cover-badges">
+    <table class="badge-row"><tr>
+      <td><div class="badge-v">1250×700×2000</div><div class="badge-l">габариты, мм</div></td>
+      <td><div class="badge-v">2 растения</div><div class="badge-l">SCROG · 0,65 м² канопы</div></td>
+      <td><div class="badge-v">SE3000</div><div class="badge-l">300 Вт · PPF 856</div></td>
+      <td><div class="badge-v">GGS</div><div class="badge-l">полная автоматика</div></td>
+    </tr></table>
+  </div>
+  <div class="cover-foot">Сводный документ для изготовителя мебели и монтажа · 28 сентября 2026</div>
+</div>
+
+<!-- ================= 1. КОНЦЕПЦИЯ ================= -->
+<h2 class="sec"><span class="num">01</span>Концепция и ключевые параметры</h2>
+<p class="lead">Гроубокс проектируется как предмет мебели: матовый корпус, скрытая фурнитура, длинные мебельные ручки.
+Тишина — не опция, а функция: конструкция, виброизоляция и воздушный тракт спроектированы так,
+чтобы шкаф не было слышно во сне. Вся автоматика — единая экосистема Spider Farmer GGS.</p>
+
+<table class="two-col"><tr>
+<td>
+<table class="kv">
+  <tr><td class="k">Габариты (Ш×Г×В)</td><td class="v">1250 × 700 × 2000 мм</td></tr>
+  <tr><td class="k">Зоны</td><td class="v">тех-колонна 400 + растения 796 + колодец 58</td></tr>
+  <tr><td class="k">Растения</td><td class="v">2 шт., SCROG V-рамка, горшки 15 л</td></tr>
+  <tr><td class="k">Свет</td><td class="v">SE3000 + UV30 / IR16 на актуаторе</td></tr>
+  <tr><td class="k">Экосистема</td><td class="v">Spider Farmer GGS (Controller, 2× AC10)</td></tr>
+  <tr><td class="k">Установка</td><td class="v">спальня, вытяжка отфильтрованного воздуха в комнату</td></tr>
+</table>
+</td>
+<td>
+<table class="t">
+  <tr><th>Задача</th><th>Решение</th></tr>
+  <tr><td>Скрытое выращивание в жилой комнате</td><td>Мебельный вид, свето- и запахонепроницаемость</td></tr>
+  <tr><td>Тишина ночью</td><td>Сэндвич стен, шумо-отсек, глушитель, виброразвязка</td></tr>
+  <tr><td>Климатическая стабильность</td><td>VPD-контроль, автодимм по PAR/DLI</td></tr>
+  <tr><td>Автономность</td><td>Автодозатор, pH-коррекция, гравитационный долив</td></tr>
+  <tr><td>Обслуживаемость</td><td>Доступ к фильтру, баку, электрике без разборки</td></tr>
+</table>
+</td>
+</tr></table>
+
+<div class="fig">
+  <img src="img/render_front.png" style="width: 47%;">
+  <div class="cap">Фасад: слева тех-колонна, справа зона растений с дверью</div>
+</div>
+
+<div class="flow" style="margin-top:2mm; padding:3mm 5mm;">выглядит как <b>мебель</b> · звучит как <b>тишина</b> · работает как <b>швейцарские часы</b></div>
+
+<!-- ================= 2. АРХИТЕКТУРА ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">02</span>Архитектура и зонирование</h2>
+
+<table class="fig-row"><tr>
+  <td><img src="img/render_cut.png" style="width:100%; border:1px solid #e2e4e8; border-radius:1.5mm;"><div class="cap">Разрез без фасадов</div></td>
+  <td><img src="img/render_side.png" style="width:100%; border:1px solid #e2e4e8; border-radius:1.5mm;"><div class="cap">Боковой вид</div></td>
+  <td><img src="img/render_top.png" style="width:100%; border:1px solid #e2e4e8; border-radius:1.5mm;"><div class="cap">Вид сверху</div></td>
+</tr></table>
+
+<h3>Раскладка по ширине — сходится точно</h3>
+<div class="flow"><b>18</b> стенка + <b>400</b> тех-колонна + <b>18</b> перегородка + <b>796</b> зона растений + <b>18</b> стенка = <b>1250 мм</b></div>
+<div class="note"><b>Исправлено против v2:</b> в версии 2.0 раскладка «450 + 800 + 80» не сходилась с 1250 мм.
+В v3.0 колонна 400 мм (бак 280 мм встаёт с направляющими), зона растений 796 мм, задний кабельный колодец 58 мм
+закрыт оргалитом 4 мм. При необходимости внешняя глубина может быть увеличена до 720 мм.</div>
+
+<h3>Зоны</h3>
+<table class="zones">
+  <tr><td class="z1">Тех-колонна (сухая)</td><td class="z2">400 × 620 × 1964</td><td>Бак 20 л в ящике, перистальтика и компрессор, секрет-бокс, DIN-панель электроники, резервный бак 20 л, вент-модуль вверху</td></tr>
+  <tr><td class="z1">Зона растений (влажная)</td><td class="z2">796 × 620 × 1964</td><td>2 горшка 15 л, SCROG V-рамка, SE3000 + UV/IR на актуаторе, угольный фильтр под потолком, EVA-коврик с бортами</td></tr>
+  <tr><td class="z1">Кабельный колодец</td><td class="z2">58 мм сзади</td><td>Все кабели и шланги за задней стенкой, закрыт оргалитом 4 мм; один силовой кабель наружу</td></tr>
+</table>
+
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">02</span>Архитектура <span style="font-size:10pt; color:#9aa0a6; font-weight:normal;">· вертикальная раскладка модулей</span></h2>
+<h3>Вертикальная раскладка тех-колонны</h3>
+<table class="t">
+  <tr><th style="width:22mm;">Z, мм</th><th>Модуль</th><th>Нагрузка</th></tr>
+  <tr><td class="b">0–520</td><td>Ящик с рабочим баком 20 л (Blum Tandem 500 + усиление)</td><td>~25 кг</td></tr>
+  <tr><td class="b">520–820</td><td>Ящик: перистальтика, компрессор, ИБП 600 ВА</td><td>~15 кг</td></tr>
+  <tr><td class="b">820–1080</td><td>Секрет-бокс: увлажнитель SF 5 л, дозатор удобрений, pH-модуль, Wi-Fi камера</td><td>—</td></tr>
+  <tr><td class="b">1080–1420</td><td>DIN-панель: 2× AC10, GGS Controller, БП 12 В, DPDT, ESP32</td><td>~5 кг</td></tr>
+  <tr><td class="b">1420–1778</td><td>Резервный бак 20 л на полке с рамой 30×30 + поплавковый клапан 3/4"</td><td>~22 кг</td></tr>
+  <tr><td class="b">1778–1982</td><td>Вент-модуль: SF 4" на виброподвесах, шумоглушитель, решётка 400×300 в комнату</td><td>~7 кг</td></tr>
+</table>
+
+<h3>Зона растений — вертикальная раскладка</h3>
+<table class="t">
+  <tr><th style="width:22mm;">Z, мм</th><th>Модуль</th></tr>
+  <tr><td class="b">18–68</td><td>Коврик EVA с бортами 50 мм + датчик протечки</td></tr>
+  <tr><td class="b">68–388</td><td>2 горшка 15 л (Ø320), Soil Sensor Pro в каждом</td></tr>
+  <tr><td class="b">400–1400</td><td>Направляющие SCROG на боковинах, рамка V 700×500 на кронштейнах, борта 18° — канопа ~0,65 м²</td></tr>
+  <tr class="hl"><td class="b">1351–1421</td><td>SE3000 + UV30/IR16 (рабочее положение в модели)</td></tr>
+  <tr><td class="b">1421–1710</td><td>Шток актуатора 12 В (ход 300 мм, аварийный быстросъём)</td></tr>
+  <tr><td class="b">1710–1902</td><td>Корпус актуатора на траверсе 600 мм</td></tr>
+  <tr><td class="b">1775–1975</td><td>Угольный фильтр SF 4" горизонтально, торец — к сервисной зоне</td></tr>
+  <tr><td class="b">1520</td><td>LED-полоса 520–540 нм (зелёная подсветка, работа в тёмной фазе)</td></tr>
+</table>
+
+<!-- ================= 3. ОБОРУДОВАНИЕ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">03</span>Оборудование Spider Farmer</h2>
+<p class="lead">Всё оборудование — единая экосистема Spider Farmer GGS: устройства соединяются умным кабелем (RJ12),
+управляются одним контроллером и приложением, триггеры климата работают сквозняк-без-участия.
+Ниже — состав по спецификации v3.0.</p>
+
+<table class="cards">
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/se3000.jpg">
+      <div class="card-name">Spider Farmer SE3000</div>
+      <div class="card-tag">Основной свет</div>
+      <div class="card-spec"><b>300 Вт</b> · PPF 856 µmol/s · PPE 2.85 · 603×585×71 мм · покрытие до 90×90 см</div>
+      <div class="card-role">В зоне 796×620 висит с зазорами 96 мм по бокам — радиаторы омываются со всех сторон. Подъём на штоке актуатора 12 В (ход 300 мм), автодиммирование по PAR/DLI.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/uvir.jpg">
+      <div class="card-name">UV30 + IR16 (UVR-бар)</div>
+      <div class="card-tag">Спектральное дополнение</div>
+      <div class="card-spec"><b>UV-A 365 нм · IR 730 нм</b> · бары 600 мм · крепление по бокам вдоль глубины</div>
+      <div class="card-role">UV — последние 2–3 недели цветения (канал 9), IR — рассвет/закат ±15 мин (канал 10). Высота как у SE3000.</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/fan4.jpg">
+      <div class="card-name">Вентилятор SF 4" (Ø100)</div>
+      <div class="card-tag">Воздушный тракт</div>
+      <div class="card-spec"><b>до ~220 м³/ч</b> · рабочие 80–135 м³/ч (35–50%) · управление по T/RH через GGS</div>
+      <div class="card-role">Выбран вместо 6": тише в рабочей точке, компактнее в колонне 400 мм. На виброподвесах в шумо-отсеке, минимальные обороты ночью.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/ventkit4.jpg">
+      <div class="card-name">Угольный фильтр SF 4" + шумоглушитель</div>
+      <div class="card-tag">Фильтрация и тишина</div>
+      <div class="card-spec"><b>Ø100 мм</b> · фильтр горизонтально под потолком зоны · глушитель после вентилятора</div>
+      <div class="card-role">Фильтр — строго ДО вентилятора: лабиринт притока → растения → фильтр → вентилятор → глушитель → пленум → решётка в комнату.</div>
+    </div>
+  </td>
+</tr>
+</table>
+
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">03</span>Оборудование Spider Farmer <span style="font-size:10pt; color:#9aa0a6; font-weight:normal;">· управление и датчики</span></h2>
+
+<table class="cards">
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/ggs.jpg">
+      <div class="card-name">GGS Controller</div>
+      <div class="card-tag">Мозг системы</div>
+      <div class="card-spec"><b>Экран + приложение</b> · расписания, триггеры, история · до 10 портов RJ12</div>
+      <div class="card-role">Постоянная группа: питание от ИБП 600 ВА вместе с 2 каналами AC10 и камерой (~20 Вт, 2–4 ч).</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/ac10.jpg">
+      <div class="card-name">GGS AC10 ×2</div>
+      <div class="card-tag">Умные розетки</div>
+      <div class="card-spec"><b>20 розеток суммарно</b> · 10 каналов с индивидуальным контролем · датчик T/RH в комплекте</div>
+      <div class="card-role">Карта каналов: свет, вентилятор, обдув, увлажнитель, помпа, компрессор, актуатор ×2, UV, IR, дозаторы ×4, резерв ×6.</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/sensorpro.png">
+      <div class="card-name">GGS SensorPro</div>
+      <div class="card-tag">5-в-1 датчик</div>
+      <div class="card-spec"><b>CO₂ + PAR + T + RH + VPD</b> · автодимм света по PAR · расчёт DLI</div>
+      <div class="card-role">Основа климатических сценариев: VPD → увлажнитель, PAR/DLI → диммер SE3000, T/RH → вентилятор.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/soil.jpg">
+      <div class="card-name">Soil Sensor Pro ×2</div>
+      <div class="card-tag">Датчики почвы</div>
+      <div class="card-spec"><b>Влажность + EC + температура</b> · по одному в каждый горшок 15 л</div>
+      <div class="card-role">Данные по каждому растению → сигнал на перистальтический насос автодозатора. Влажная зона: сенсоры в горшках, не на полу.</div>
+    </div>
+  </td>
+</tr>
+</table>
+
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">03</span>Оборудование Spider Farmer <span style="font-size:10pt; color:#9aa0a6; font-weight:normal;">· климат и полив</span></h2>
+
+<table class="cards">
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/humid.jpg">
+      <div class="card-name">Увлажнитель SF 5 л</div>
+      <div class="card-tag">Климат</div>
+      <div class="card-spec"><b>5 л</b> · триггер VPD · патрубок Ø40 через сервисную перегородку</div>
+      <div class="card-role">Стоит в секрет-боксе тех-колонны (Z 820–1080), паровод в зону растений по патрубку — наружу не выходит.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/drip.jpg">
+      <div class="card-name">Автодозатор: перистальтика + ESP32</div>
+      <div class="card-tag">Полив и питание</div>
+      <div class="card-spec"><b>3 перистальтических насоса</b> (A / B / микро) + pH-насос · EC/pH-датчики · шланги 4/6 мм</div>
+      <div class="card-role">Рабочий бак 20 л в выдвижном ящике + резервный бак 20 л с поплавковым клапаном 3/4" — гравитационный долив без электроники.</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td>
+    <div class="card">
+      <img class="card-img" src="img/irac.png">
+      <div class="card-name">IR AC Companion <span style="font-size:8pt; color:#9aa0a6;">(опция)</span></div>
+      <div class="card-tag">Летний сценарий</div>
+      <div class="card-spec"><b>ИК-управление сплитом</b> · автоматическое охлаждение по датчику температуры</div>
+      <div class="card-role">Открытый вопрос: есть ли сплит-кондиционер в спальне. Если да — интеграция в GGS без новых кабелей.</div>
+    </div>
+  </td>
+  <td>
+    <div class="card" style="border-top-color:#e8a33d;">
+      <div style="height:42mm; background:#f6f7f9; border-radius:1.5mm; padding:4mm;">
+        <div style="font-size:9pt; color:#40464f;"><b>Также в спецификации (без фото):</b></div>
+        <ul class="tight" style="font-size:8.4pt; color:#40464f;">
+          <li>ИБП 600 ВА — Controller + 2 канала AC10 + камера, 2–4 ч</li>
+          <li>Актуатор 12 В подъёма лампы, ход 300 мм</li>
+          <li>Камера Wi-Fi (модель уточняется)</li>
+          <li>Датчик протечки в EVA-коврике</li>
+          <li>LED-полоса 520–540 нм (зелёный свет)</li>
+        </ul>
+      </div>
+      <div class="card-name">Комплектация по умолчанию</div>
+      <div class="card-tag">Мелочёвка</div>
+      <div class="card-role">Датчик протечки — обязательный элемент: коврик с бортами 50 мм в зоне растений.</div>
+    </div>
+  </td>
+</tr>
+</table>
+
+<!-- ================= 4. ИНЖЕНЕРИЯ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">04</span>Инженерия: воздух, тишина, электрика</h2>
+
+<h3>Воздушный тракт</h3>
+<div class="flow">лабиринт притока (низ двери) → <b>растения</b> → <b>фильтр SF 4"</b> (под потолком зоны) → воздуховод Ø100 через перегородку → <b>вентилятор SF 4"</b> (виброподвесы) → <b>шумоглушитель</b> → пленум с решёткой 400×300 → <b>комната</b></div>
+<table class="t">
+  <tr><th>Параметр</th><th>Значение</th><th>Комментарий</th></tr>
+  <tr><td>Объём зоны растений</td><td class="b">0,97 м³</td><td>Расчётный воздухообмен 80–135 м³/ч</td></tr>
+  <tr><td>Вентилятор SF 4"</td><td class="b">до ~220 м³/ч</td><td>Рабочий режим 35–50% — запас есть</td></tr>
+  <tr><td>Разрежение</td><td class="b">обязательно</td><td>Сечение притока &gt; вытяжного; фильтр строго до вентилятора</td></tr>
+</table>
+
+<h3>Сервисная перегородка — отверстия (прорезаны в модели)</h3>
+<table class="t">
+  <tr><th style="width:30mm;">Отверстие</th><th>Назначение</th></tr>
+  <tr><td class="b">Ø100, Z=1875</td><td>Тракт фильтр → вентилятор</td></tr>
+  <tr><td class="b">Ø40, Z=1150</td><td>Патрубок увлажнителя</td></tr>
+  <tr><td class="b">3× Ø25</td><td>RJ12 датчики, слаботочка (Z=1330/1370/1410)</td></tr>
+  <tr><td class="b">Ø20, Z=900</td><td>Силовой ввод, шланги полива 4/6 мм</td></tr>
+</table>
+<div class="note">Все вводы — с резиновыми гермовводами (PG-13.5 / PG21), не ниже 150 мм от пола.</div>
+
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">04</span>Инженерия <span style="font-size:10pt; color:#9aa0a6; font-weight:normal;">· программа тишины</span></h2>
+<h3>Мероприятия по шуму</h3>
+<table class="two-col"><tr><td>
+<ul class="tight">
+  <li><b>Сэндвич стен и двери:</b> ЛДСП 18 → MLV 2–3 мм → минвата 20–30 мм → обшивка (≈51 мм)</li>
+  <li><b>Виброразвязка:</b> вентилятор на виброподвесах, опоры 60 мм (прокладка/каучук), помпа на коврике</li>
+  <li><b>Шумо-отсек:</b> вент-модуль отделён, воздуховод через шумоглушитель</li>
+  <li><b>Герметизация света:</b> нахлёст-планки, уплотнитель по периметру, порожек, лабиринт притока</li>
+  <li><b>Электроника:</b> вся в колонне, индикаторы не светят в комнату</li>
+  <li><b>Контроль:</b> финальный тест — blackout test и замер шума в рабочей точке</li>
+</ul>
+</td><td>
+<img src="img/noise.jpg" style="width:100%; border:1px solid #e2e4e8; border-radius:1.5mm;">
+<div class="cap" style="font-size:8pt; color:#6b7078; margin:1.5mm 0 2mm 0;">Уровень шума вентилятора SF 4" (по данным производителя)</div>
+<div class="note" style="margin:0;"><b>Цель — «не слышно во сне».</b> Сэндвич стен и двери (≈51 мм с MLV), шумо-отсек, глушитель и виброразвязка разрывают все три пути шума: структурный, вибрационный и воздушный. Приёмка — замер шума у изголовья в ночном режиме.</div>
+</td></tr></table>
+
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">04</span>Инженерия <span style="font-size:10pt; color:#9aa0a6; font-weight:normal;">· электрика</span></h2>
+
+<h3>Электрика — карта каналов (2× AC10, 20 розеток)</h3>
+<table class="t">
+  <tr><th style="width:18mm;">Канал</th><th>Устройство</th><th>Режим</th></tr>
+  <tr><td class="b">1</td><td>Свет SE3000 (драйвер)</td><td>расписание + автодиммер по PAR/DLI</td></tr>
+  <tr><td class="b">2</td><td>Вентилятор SF 4"</td><td>триггеры T/RH, минимум ночью</td></tr>
+  <tr><td class="b">3</td><td>БП обдува 12 В</td><td>постоянно / по датчикам</td></tr>
+  <tr><td class="b">4</td><td>Увлажнитель SF 5 л</td><td>триггер VPD</td></tr>
+  <tr><td class="b">5</td><td>Помпа перистальтики</td><td>по Soil Sensor / расписанию</td></tr>
+  <tr><td class="b">6</td><td>Компрессор аэрации</td><td>таймер (15 мин/час)</td></tr>
+  <tr><td class="b">7 / 8</td><td>Реле актуатора «ВВЕРХ» / «ВНИЗ»</td><td>импульсное</td></tr>
+  <tr><td class="b">9</td><td>UV30</td><td>последние 2–3 недели цветения</td></tr>
+  <tr><td class="b">10</td><td>IR16</td><td>рассвет/закат ±15 мин</td></tr>
+  <tr><td class="b">11–14</td><td>Дозатор A/B/микро + pH-насос</td><td>по ESP32 + EC/pH</td></tr>
+  <tr><td class="b">15–20</td><td>Резерв (обогрев, осушитель, сервис)</td><td>—</td></tr>
+</table>
+<div class="warn"><b>Постоянная группа (вне AC10):</b> камера Wi-Fi (ИК ночью отключать!), GGS Controller/БП, ИБП 600 ВА
+(держит Controller + 2 канала AC10 + камеру ~20 Вт в течение 2–4 ч). Один силовой кабель наружу.</div>
+
+<!-- ================= 5. РАСКРОЙ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">05</span>Карта раскроя корпуса</h2>
+<p class="lead">Раскрой ориентировочно укладывается в 2 листа ЛДСП 2800×2070 + остатки на ящики.
+Мокрая зона — фанера 18 мм с моющимся покрытием, все торцы и сверловка герметизируются.</p>
+<div class="note"><b>Раскладка листов:</b> лист 1 — боковины, крышка, дно, перегородка; лист 2 — задние стенки, дверь, фасады, полки; остатки — ящики. Дверь 822×2000 — самая длинная деталь, раскрой начинать с неё.</div>
+
+<table class="t">
+  <tr><th style="width:8mm;">№</th><th>Деталь</th><th>Размеры Д×В×Т, мм</th><th style="width:12mm;">Кол-во</th><th>Материал</th></tr>
+  <tr><td class="b">1–2</td><td>Боковина левая / правая</td><td>700 × 2000 × 18</td><td class="c">2</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">3–4</td><td>Крышка / дно</td><td>1214 × 700 × 18</td><td class="c">2</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">5</td><td>Перегородка сервисная (прорези по схеме)</td><td>620 × 1964 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">6</td><td>Задняя стенка тех-зоны</td><td>418 × 1964 × 18</td><td class="c">1</td><td>Фанера 18</td></tr>
+  <tr><td class="b">7</td><td>Задняя стенка зоны роста</td><td>796 × 1964 × 18</td><td class="c">1</td><td>Фанера 18</td></tr>
+  <tr><td class="b">8</td><td>Оргалит колодца</td><td>1214 × 1964 × 4</td><td class="c">1</td><td>Оргалит 4</td></tr>
+  <tr><td class="b">9</td><td>Дверь зоны роста (петли Blum ×5)</td><td>822 × 2000 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">10</td><td>Фасад тех-зоны верх</td><td>428 × 1180 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">11</td><td>Фасад ящика (помпа)</td><td>428 × 300 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">12</td><td>Фасад ящика (бак)</td><td>428 × 520 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">13</td><td>Полка секрет-бокса</td><td>400 × 620 × 18</td><td class="c">1</td><td>ЛДСП 18</td></tr>
+  <tr><td class="b">14</td><td>Полка резервного бака</td><td>400 × 620 × 18</td><td class="c">1</td><td>ЛДСП 18 + рама 30×30</td></tr>
+  <tr><td class="b">15</td><td>Панель электроники (съёмная)</td><td>400 × 340 × 10</td><td class="c">1</td><td>Фанера 10</td></tr>
+  <tr><td class="b">16</td><td>Ящик бака (комплект)</td><td>374 × 550 × 470</td><td class="c">1</td><td>ЛДСП 12 + Tandem 500</td></tr>
+  <tr><td class="b">17</td><td>Ящик насосов (комплект)</td><td>374 × 550 × 240</td><td class="c">1</td><td>ЛДСП 12 + Tandem 500</td></tr>
+</table>
+
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">05</span>Материалы и порядок работ</h2>
+
+<h3>Требования к материалам</h3>
+<table class="t">
+  <tr><th>Элемент</th><th>Материал</th><th>Требования</th></tr>
+  <tr><td>Наружные панели и фасады</td><td>ЛДСП 18, матовый декор</td><td>Кромки ABS проклеены, мебельный вид</td></tr>
+  <tr><td>Стенки мокрой зоны</td><td>Фанера 15–18 + моющееся покрытие</td><td>Торцы, сверловка, шканты — герметизация</td></tr>
+  <tr><td>Акустический сэндвич</td><td>ЛДСП/фанера → MLV → минвата</td><td>Дверь двойная, без пустот</td></tr>
+  <tr><td>Фурнитура</td><td>Blum TANDEM / CLIP / AVENTOS</td><td>Тихое закрывание, доводчики</td></tr>
+</table>
+
+<h3>Порядок работ мебельщика</h3>
+<table class="two-col"><tr><td>
+<ul class="tight">
+  <li><b>1.</b> Точный раскрой (ЦПУ), кромление ABS всех торцов</li>
+  <li><b>2.</b> Сверловка отверстий перегородки по схеме (Ø100/40/25/20)</li>
+  <li><b>3.</b> Сборка корпуса, установка силовой рамы под ящики</li>
+</ul>
+</td><td>
+<ul class="tight">
+  <li><b>4.</b> Монтаж акустического сэндвича и уплотнений</li>
+  <li><b>5.</b> Фурнитура Blum, навеска двери (петли ×5)</li>
+  <li><b>6.</b> Герметизация мокрой зоны, коврик EVA, приёмка</li>
+</ul>
+</td></tr></table>
+
+<h3>Файлы 3D-модели v3.0</h3>
+<table class="t">
+  <tr><th>Файл</th><th>Назначение</th></tr>
+  <tr><td class="b">growbox_v3.step</td><td>Основной — открыть в КОМПАС-3D (Файл → Открыть/Импорт), сборка с именами деталей</td></tr>
+  <tr><td class="b">growbox_v3.stl</td><td>Быстрый просмотр / 3D-печать макета</td></tr>
+  <tr><td class="b">growbox_v3.glb + viewer.html</td><td>Цветная модель для любого 3D-просмотрщика</td></tr>
+  <tr><td class="b">build_growbox_v3.py</td><td>Исходник модели (CadQuery) — менять размеры и пересобирать</td></tr>
+</table>
+
+<!-- ================= 6. ВОПРОСЫ ================= -->
+<div class="page-break"></div>
+<h2 class="sec"><span class="num">06</span>Открытые вопросы и следующие шаги</h2>
+<p class="lead">Перед запуском в производство нужно закрыть три вопроса. Ниже — также текущий статус проекта и монтажный чек-лист.</p>
+
+<table class="t">
+  <tr><th style="width:8mm;">№</th><th>Вопрос</th><th>Влияние</th></tr>
+  <tr><td class="b">1</td><td><b>Летний сценарий:</b> есть ли сплит-кондиционер в спальне?</td><td>Если да — добавляем IR AC Companion в постоянную группу и сценарий охлаждения</td></tr>
+  <tr><td class="b">2</td><td><b>Камера Wi-Fi:</b> конкретная модель</td><td>Место в секрет-боксе уже зарезервировано; важен ИК-режим (ночью отключать)</td></tr>
+  <tr><td class="b">3</td><td><b>Декор фасадов:</b> цвет и тип матового покрытия</td><td>Для мебельщика — финальный выбор перед раскроем</td></tr>
+</table>
+
+<div class="note"><b>Статус проекта:</b> размеры согласованы, 3D-модель v3.0 собрана и проверена
+(76 именованных деталей, STEP/STL/GLB, рендеры). Документ готов к передаче мебельщику:
+карта раскроя (раздел 05), схема отверстий перегородки (раздел 04) и требования к материалам.</div>
+
+<h3>Чек-лист монтажа</h3>
+<table class="two-col"><tr><td>
+<ul class="tight">
+  <li>Розетки и вводы — не ниже 150 мм от пола</li>
+  <li>Силовая рама под тяжёлые ящики (бак 25 кг, резерв 22 кг)</li>
+  <li>Все торцы ЛДСП и сверловка — герметизация</li>
+</ul>
+</td><td>
+<ul class="tight">
+  <li>Виброподвесы вентилятора и опоры 60 мм — не пропускать</li>
+  <li>Тестовый прогон 4–6 ч до заселения растений</li>
+  <li>Blackout test двери и порогов</li>
+</ul>
+</td></tr></table>
+
+<div class="closing" style="page-break-inside: avoid;">
+<div class="fig">
+  <img src="img/render_iso.png" style="width: 64%;">
+  <div class="cap">Гроубокс v3.0 — итоговый вид · модель 27.09.2026</div>
+</div>
+
+<div class="closing-band">
+  <table><tr>
+    <td><div class="cb-v">1250×700×2000</div><div class="cb-l">габариты, мм</div></td>
+    <td><div class="cb-v">76 деталей</div><div class="cb-l">STEP для КОМПАС-3D</div></td>
+    <td><div class="cb-v">2 листа ЛДСП</div><div class="cb-l">раскрой 2800×2070</div></td>
+    <td><div class="cb-v">Готово</div><div class="cb-l">к передаче мебельщику</div></td>
+  </tr></table>
+</div>
+<div class="small" style="margin-top:3mm; text-align:center;">Сводный документ v3.0 · 28 сентября 2026 · приложение: growbox_v3.step / .stl / .glb + спецификация growbox_v3_spec.md</div>
+</div>
+
+</body>
+</html>
