@@ -32,6 +32,19 @@
 5. **v3.1 (в работе)** → [`docs/growbox_v3.1_acoustic-tech-module.md`](docs/growbox_v3.1_acoustic-tech-module.md) — верхний акустический техмодуль; [`docs/growbox_v3.1_silencer.md`](docs/growbox_v3.1_silencer.md) — самодельный двухкамерный шумоглушитель; [`docs/growbox_v3.1_fasteners.md`](docs/growbox_v3.1_fasteners.md) — крепёжная карта (узлы, крепёж, ссылки). Чертежи в `docs/drawings/`.
 6. **CAD v3.1 rev.2 (модули A/B/C)** → [`models/v3.1/`](models/v3.1/) — 56 деталей, полная сборка STEP, DXF раскроя; импорт в КОМПАС-3D — по [`docs/kompas_import_v3.1.md`](docs/kompas_import_v3.1.md).
 
+## 💻 Локальная сборка на своём ПК (Windows)
+
+Чтобы не скачивать готовые файлы, а пересобирать модель под свои размеры:
+
+1. Установи [Python 3.12](https://python.org/downloads/) — **с галочкой «Add python.exe to PATH»**
+2. Склонируй репозиторий (или скачай ZIP: кнопка `Code → Download ZIP`)
+3. В папке проекта запусти `setup.ps1` (правой кнопкой → Run with PowerShell) — поставит CadQuery
+4. Запусти `build.bat` — модель пересоберётся, файлы обновятся в `models/v3.1/`
+
+Чтобы поменять размеры: открой `models/v3.1/build_v31_modular.py`, блок параметров `P = dict(...)`
+в начале (ширины модулей, толщины ЛДСП, габариты оборудования) → сохрани → `build.bat`.
+Протокол проверок габаритов — `models/v3.1/reports/fit_check.txt`.
+
 ## 🔧 Ключевые решения v3.0
 
 - **Свет:** SE3000 (603×585×71, PPF 856) — встаёт в зону с зазорами 96 мм по бокам; SE4500 снят (не влезает). Дополнительно UV30/IR16, зелёная подсветка 520–540 нм, актуатор подъёма 12 В (ход 300 мм).
