@@ -309,6 +309,51 @@ exporters.export(cq.Workplane(obj=Compound.makeCompound(compound_shapes)),
 exporters.export(cq.Workplane(obj=Compound.makeCompound(compound_shapes)),
                  os.path.join(HERE, "step", "growbox_v31_rev2.stl"))
 
+# ============================== ВАРИАНТ «ОТКРЫТО» (ход механизмов) ==============================
+# Сборка в развёрнутом состоянии: двери распахнуты, ящики выдвинуты, фасады на газлифтах подняты.
+# Это визуальная проверка ходов; реальное движение в КОМПАС-3D — через связи (docs/kompas_motion.md).
+def _rot(shape, x, y, z, dx, dy, dz, ang):
+    return shape.rotate(Vector(x, y, z), Vector(x + dx, y + dy, z + dz), ang)
+
+
+def _mv(shape, dx, dy, dz):
+    return shape.translate(Vector(dx, dy, dz))
+
+
+OPEN_ANGLE_DOOR = 100     # распашная дверь камеры, град
+OPEN_ANGLE_GAS = 70       # фасады на газлифтах, град
+SLIDE_DRAWER = 450        # выдвижение ящиков, мм (Tandem 500 — полный ход 500)
+SLIDE_PLATFORM = 450      # выдвижение платформы, мм
+
+asm_open = cq.Assembly(name="GrowBox_v3.1_rev2_OPEN")
+for p in parts:
+    nm, sh = p["name"], p["shape"]
+    if nm.startswith("10_Дверь"):                      # петли Blum — правая кромка
+        sh = _rot(sh, W - T, 0, 0, 0, 0, 1, OPEN_ANGLE_DOOR)
+    elif nm.startswith(("11_Фасад_ящика_бака", "29_Ящик_бака")):
+        sh = _mv(sh, 0, -SLIDE_DRAWER, 0)
+    elif nm.startswith(("12_Фасад_ящика_сервиса", "30_Ящик_сервисный")):
+        sh = _mv(sh, 0, -SLIDE_DRAWER, 0)
+    elif nm.startswith("13_Фасад_секрет"):
+        sh = _mv(sh, 0, -SLIDE_DRAWER + 100, 0)
+    elif nm.startswith("14_Фасад_верх_B"):             # газлифты ×2, ось по верхней кромке
+        sh = _rot(sh, 0, 0, Z_A0, 1, 0, 0, -OPEN_ANGLE_GAS)
+    elif nm.startswith("15_Фасад_A"):
+        sh = _rot(sh, 0, 0, H, 1, 0, 0, -OPEN_ANGLE_GAS)
+    elif nm.startswith(("22_Платформа", "23_Горшок")):
+        sh = _mv(sh, 0, -SLIDE_PLATFORM, 0)
+    asm_open.add(cq.Workplane(obj=sh), name=nm, color=cq.Color(*p["color"]))
+
+asm_open.save(os.path.join(HERE, "step", "growbox_v31_rev2_open.step"))
+try:
+    exporters.export(cq.Workplane(obj=Compound.makeCompound(list(asm_open.toCompound().Solids()))),
+                     os.path.join(HERE, "renders", "preview_open_iso.svg"),
+                     exportType="SVG",
+                     opt={"width": 1400, "height": 1000, "projectionDir": (1, -1, 0.6),
+                          "showAxes": False, "strokeWidth": 0.4})
+except Exception as e:
+    print(f"[warn] svg open: {e}")
+
 views = dict(front=(0, -1, 0), side=(1, 0, 0), top=(0, 0, 1), iso=(1, -1, 0.6))
 for vname, vdir in views.items():
     try:
