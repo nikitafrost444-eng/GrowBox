@@ -14,6 +14,7 @@
 | `docs/` | Документация: полное описание v1.0, спецификация v3.0 с картой раскроя, **v3.1 акустический техмодуль и шумоглушитель**, крепёжная карта, журналы сессий |
 | `docs/drawings/` | Инженерные чертежи: разрез и план верхнего акустического модуля v3.1 |
 | `models/` | 3D-модель: STEP (для КОМПАС-3D), STL, GLB + веб-просмотрщик, исходники (CadQuery) |
+| `models/v3.1/` | **CAD v3.1 rev.2 (модульная архитектура A/B/C):** STEP по каждой детали + полная сборка, DXF раскроя, карта раскроя CSV, протокол проверок, исходник CadQuery |
 | `models/renders/` | Цветные рендеры: общий вид, фасад, бок, разрез, сверху |
 | `models/previews/` | Чертёжные SVG-превью |
 | `pdf/` | Издательские PDF: концепция v1.0, описание v2.0, сборки v3.0 и v3.1 rev.2 |
@@ -29,6 +30,7 @@
 3. **3D-модель** → `models/growbox_v3.step` — открыть в КОМПАС-3D (Файл → Открыть/Импорт), 76 именованных деталей; либо `models/viewer.html` + `models/growbox_v3.glb` в браузере.
 4. **Итоговый PDF** → `pdf/growbox_v31_rev2.pdf`.
 5. **v3.1 (в работе)** → [`docs/growbox_v3.1_acoustic-tech-module.md`](docs/growbox_v3.1_acoustic-tech-module.md) — верхний акустический техмодуль; [`docs/growbox_v3.1_silencer.md`](docs/growbox_v3.1_silencer.md) — самодельный двухкамерный шумоглушитель; [`docs/growbox_v3.1_fasteners.md`](docs/growbox_v3.1_fasteners.md) — крепёжная карта (узлы, крепёж, ссылки). Чертежи в `docs/drawings/`.
+6. **CAD v3.1 rev.2 (модули A/B/C)** → [`models/v3.1/`](models/v3.1/) — 56 деталей, полная сборка STEP, DXF раскроя; импорт в КОМПАС-3D — по [`docs/kompas_import_v3.1.md`](docs/kompas_import_v3.1.md).
 
 ## 🔧 Ключевые решения v3.0
 
