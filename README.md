@@ -30,7 +30,7 @@
 3. **3D-модель** → `models/growbox_v3.step` — открыть в КОМПАС-3D (Файл → Открыть/Импорт), 76 именованных деталей; либо `models/viewer.html` + `models/growbox_v3.glb` в браузере.
 4. **Итоговый PDF** → `pdf/growbox_v31_rev2.pdf`.
 5. **v3.1 (в работе)** → [`docs/growbox_v3.1_acoustic-tech-module.md`](docs/growbox_v3.1_acoustic-tech-module.md) — верхний акустический техмодуль; [`docs/growbox_v3.1_silencer.md`](docs/growbox_v3.1_silencer.md) — самодельный двухкамерный шумоглушитель; [`docs/growbox_v3.1_fasteners.md`](docs/growbox_v3.1_fasteners.md) — крепёжная карта (узлы, крепёж, ссылки). Чертежи в `docs/drawings/`.
-6. **CAD v3.1 rev.2 (модули A/B/C)** → [`models/v3.1/`](models/v3.1/) — 62 детали, полная сборка STEP, DXF раскроя; импорт в КОМПАС-3D — по [`docs/kompas_import_v3.1.md`](docs/kompas_import_v3.1.md).
+6. **CAD v3.1 rev.2 (модули A/B/C)** → [`models/v3.1/`](models/v3.1/) — 64 детали, полная сборка STEP, DXF раскроя; импорт в КОМПАС-3D — по [`docs/kompas_import_v3.1.md`](docs/kompas_import_v3.1.md).
 
 ## 💻 Локальная сборка на своём ПК (Windows)
 

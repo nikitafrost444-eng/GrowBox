@@ -162,15 +162,20 @@ for i, (fx, fy) in enumerate([(40, 40), (W - 120, 40), (40, D - 120), (W - 120, 
         "foot", None, 4, "Пробка/каучук 60", M, "фурнитура")
 
 # ============================== ФАСАДЫ («абсолютный стелс») ==============================
-# Двери шкафа — две, по секциям: левая = тех-колонна B (за ней шкафчики/ящики),
-# правая = камера роста C. Петли Blum Clip, Push-to-Open, без ручек.
-DOOR_GAP = 2                                  # зазор между дверями
-DOOR_B_W = PART_X1 - DOOR_GAP                 # 434 мм (0…434)
-DOOR_C_X0, DOOR_C_W = PART_X1, W - PART_X1    # 436…1250 → 814 мм
+# Двери шкафа — три (узкие створки против провисания): левая = тех-колонна B,
+# две на камеру роста C: левая створка (петли у перегородки) + правая (петли справа).
+# Петли Blum Clip ×4 на дверь (высота 1700 — запас от провисания), Push-to-Open, без ручек.
+DOOR_GAP = 3                                  # зазор между дверями (запас на ЛДСП/влажность)
+DOOR_B_W = 434                                # 0…434 — тех-колонна
+DOOR_LEAF_W = 405                             # створки камеры
+LEAF1_X0 = DOOR_B_W + DOOR_GAP                # 437…842 — левая створка C
+LEAF2_X0 = W - DOOR_LEAF_W                    # 845…1250 — правая створка C
 add("10_Дверь_B_тех-колонна", box(0, -T, 0, DOOR_B_W, T, Z_A0), "door",
-    (DOOR_B_W, Z_A0, T), 1, "ЛДСП 18 (Blum Clip ×3, петли слева, Push-to-Open)", "B")
-add("10_Дверь_C_камера", box(DOOR_C_X0, -T, 0, DOOR_C_W, T, Z_A0), "door",
-    (DOOR_C_W, Z_A0, T), 1, "ЛДСП 18 (Blum Clip ×5, петли справа, Push-to-Open)", "C")
+    (DOOR_B_W, Z_A0, T), 1, "ЛДСП 18 (Blum Clip ×4, петли слева, Push-to-Open)", "B")
+add("10_Дверь_C1_левая", box(LEAF1_X0, -T, 0, DOOR_LEAF_W, T, Z_A0), "door",
+    (DOOR_LEAF_W, Z_A0, T), 1, "ЛДСП 18 (Blum Clip ×4, петли у перегородки, Push-to-Open)", "C")
+add("10_Дверь_C2_правая", box(LEAF2_X0, -T, 0, DOOR_LEAF_W, T, Z_A0), "door",
+    (DOOR_LEAF_W, Z_A0, T), 1, "ЛДСП 18 (Blum Clip ×4, петли справа, Push-to-Open)", "C")
 
 # Внутренние фасады ящиков/шкафчиков B — за левой дверью (утоплены внутрь корпуса)
 B_FAC_X0, B_FAC_W = T - 14, 428
@@ -394,8 +399,10 @@ SLIDE_PLATFORM = 450      # выдвижение платформы, мм
 asm_open = cq.Assembly(name="GrowBox_v3.1_rev2_OPEN")
 for p in parts:
     nm, sh = p["name"], p["shape"]
-    if nm.startswith("10_Дверь_C"):                    # камера — петли справа
+    if nm.startswith("10_Дверь_C2"):                   # правая створка камеры — петли справа
         sh = _rot(sh, W, 0, 0, 0, 0, 1, OPEN_ANGLE_DOOR)
+    elif nm.startswith("10_Дверь_C1"):                 # левая створка камеры — петли у перегородки
+        sh = _rot(sh, LEAF1_X0, 0, 0, 0, 0, 1, -OPEN_ANGLE_DOOR)
     elif nm.startswith("10_Дверь"):                    # тех-колонна — петли слева
         sh = _rot(sh, 0, 0, 0, 0, 0, 1, -OPEN_ANGLE_DOOR)
     elif nm.startswith(("11_Фасад_ящика_бака", "29_Ящик_бака")):
