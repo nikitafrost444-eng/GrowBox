@@ -1,8 +1,10 @@
 ﻿Имя в STEP (латиница);Русское наименование;Модуль;Тип
 01_Bokovina_levaya_B-C;01_Боковина_левая_B-C;B+C;деталь
 02_Bokovina_pravaya_B-C;02_Боковина_правая_B-C;B+C;деталь
-03_Dno_B-C;03_Дно_B-C;B+C;деталь
-04_Polka-perekrytie_B-C_A;04_Полка-перекрытие_B-C_A;B+C;деталь
+03_Dno_B;03_Дно_B;B;деталь
+03_Dno_C;03_Дно_C;C;деталь
+04_Polka-perekrytie_B;04_Полка-перекрытие_B;B;деталь
+04_Polka-perekrytie_C;04_Полка-перекрытие_C;C;деталь
 05_Peregorodka_B-C_servisnaya;05_Перегородка_B-C_сервисная;B+C;деталь
 06_Zadnyaya_vnutr_B;06_Задняя_внутр_B;B+C;деталь
 07_Zadnyaya_vnutr_C;07_Задняя_внутр_C;B+C;деталь
