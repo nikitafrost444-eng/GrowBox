@@ -154,9 +154,13 @@ for i, (fx, fy) in enumerate([(40, 40), (W - 120, 40), (40, D - 120), (W - 120, 
         "foot", None, 4, "Пробка/каучук 60", M, "фурнитура")
 
 # ============================== ФАСАДЫ («абсолютный стелс») ==============================
-DOOR_X0 = PART_X0 - 8      # 428 — дверь камеры перекрывает перегородку
-add("10_Дверь_камеры_C", box(DOOR_X0, -T, 0, W - DOOR_X0, T, Z_A0), "door",
-    (W - DOOR_X0, Z_A0, T), 1, "ЛДСП 18 (Blum Clip ×5, Push-to-Open)", "C")
+DOOR_X0 = PART_X0 - 8      # 428 — створки камеры перекрывают перегородку
+DOOR_GAP = 2               # зазор между створками
+DOOR_LEAF_W = (W - DOOR_X0 - DOOR_GAP) / 2   # 410 мм на створку (двустворчатая дверь)
+add("10_Дверь_C_левая", box(DOOR_X0, -T, 0, DOOR_LEAF_W, T, Z_A0), "door",
+    (DOOR_LEAF_W, Z_A0, T), 1, "ЛДСП 18 (Blum Clip ×3 на створку, Push-to-Open)", "C")
+add("10_Дверь_C_правая", box(DOOR_X0 + DOOR_LEAF_W + DOOR_GAP, -T, 0, DOOR_LEAF_W, T, Z_A0), "door",
+    (DOOR_LEAF_W, Z_A0, T), 1, "ЛДСП 18 (Blum Clip ×3 на створку, Push-to-Open)", "C")
 
 B_FAC_X0, B_FAC_W = T - 14, 428          # фасады тех-колонны в проёме 436
 add("11_Фасад_ящика_бака", box(B_FAC_X0, -T, 0, B_FAC_W, T, 500), "door",
@@ -379,8 +383,10 @@ SLIDE_PLATFORM = 450      # выдвижение платформы, мм
 asm_open = cq.Assembly(name="GrowBox_v3.1_rev2_OPEN")
 for p in parts:
     nm, sh = p["name"], p["shape"]
-    if nm.startswith("10_Дверь"):                      # петли Blum — правая кромка
-        sh = _rot(sh, W - T, 0, 0, 0, 0, 1, OPEN_ANGLE_DOOR)
+    if nm.startswith("10_Дверь_C_правая"):            # петли справа — правая створка
+        sh = _rot(sh, W, 0, 0, 0, 0, 1, OPEN_ANGLE_DOOR)
+    elif nm.startswith("10_Дверь"):                    # петли слева — левая створка
+        sh = _rot(sh, DOOR_X0, 0, 0, 0, 0, 1, -OPEN_ANGLE_DOOR)
     elif nm.startswith(("11_Фасад_ящика_бака", "29_Ящик_бака")):
         sh = _mv(sh, 0, -SLIDE_DRAWER, 0)
     elif nm.startswith(("12_Фасад_ящика_сервиса", "30_Ящик_сервисный")):

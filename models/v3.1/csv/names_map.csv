@@ -11,7 +11,8 @@
 09_Opora_dempfernaya_2;09_Опора_демпферная_2;B+C;фурнитура
 09_Opora_dempfernaya_3;09_Опора_демпферная_3;B+C;фурнитура
 09_Opora_dempfernaya_4;09_Опора_демпферная_4;B+C;фурнитура
-10_Dver_kamery_C;10_Дверь_камеры_C;C;деталь
+10_Dver_C_levaya;10_Дверь_C_левая;C;деталь
+10_Dver_C_pravaya;10_Дверь_C_правая;C;деталь
 11_Fasad_yaschika_baka;11_Фасад_ящика_бака;B;деталь
 12_Fasad_yaschika_servisa;12_Фасад_ящика_сервиса;B;деталь
 13_Fasad_sekret-boksa;13_Фасад_секрет-бокса;B;деталь
