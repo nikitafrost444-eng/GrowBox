@@ -59,7 +59,7 @@ P = dict(
     LIGHT_L=603, LIGHT_W=585, LIGHT_T=71, LIGHT_Z=1400, LIGHT_TRAVEL=300,
     UV_L=600, UV_W=60, UV_T=40,
     # верхний модуль: огибающие воздуховодов (проверить по фактическим ревизиям SF — чек ②)
-    FILTER_D=250, FILTER_L=380,
+    FILTER_D=250, FILTER_L=350,
     FAN_D=250, FAN_L=240,
     SIL_D=250, SIL_L=330,
     PLENUM_L=220, GRILLE_L=400, GRILLE_W=300,
@@ -170,19 +170,31 @@ add("14_Фасад_верх_B_газлифты", box(B_FAC_X0, -T, 1380, B_FAC_W
 add("15_Фасад_A", box(0, -T, Z_A0, W, T, MOD_A_H), "door",
     (W, MOD_A_H, T), 1, "ЛДСП 18 (газлифты ×2)", "A")
 
-# ============================== МОДУЛЬ A: ВОЗДУХОТРАКТ ==============================
+# ============================== МОДУЛЬ A: КОРПУС + ВОЗДУХОТРАКТ ==============================
 A_Y = D_ZONE / 2          # ось тракта
 A_Z = Z_A0 + (MOD_A_H - T) / 2     # центр по высоте внутри модуля
-add("16_Корпус_фильтра_SF4", cyl(200, A_Y, A_Z, P["FILTER_D"] / 2, P["FILTER_L"], "x"),
+
+# Корпус модуля A — закрывает верхний технический отсек (ЛДСП 18 + изоляция)
+add("42_Боковина_A_левая", box(0, 0, Z_A0, T, D, MOD_A_H), "carcass",
+    (D, MOD_A_H, T), 1, "ЛДСП 18", "A")
+add("43_Боковина_A_правая", box(W - T, 0, Z_A0, T, D, MOD_A_H), "carcass",
+    (D, MOD_A_H, T), 1, "ЛДСП 18", "A")
+add("44_Крышка_A", box(T, 0, H - T, W - 2 * T, D, T), "carcass",
+    (W - 2 * T, D, T), 1, "ЛДСП 18", "A")
+add("45_Задняя_A", box(T, Y_BACK_OUT0, Z_A0, W - 2 * T, P["T_BACK_OUT"], MOD_A_H), "orgalit",
+    (W - 2 * T, MOD_A_H, P["T_BACK_OUT"]), 1, "Оргалит 8", "A")
+
+# Тракт: фильтр → вентилятор → глушитель → пленум → решётка (слева направо по X)
+add("16_Корпус_фильтра_SF4", cyl(25, A_Y, A_Z, P["FILTER_D"] / 2, P["FILTER_L"], "x"),
     "filt", None, 1, "Угольный фильтр SF 4\" (огибающая)", "A", "оборудование")
-add("17_Вентилятор_SF4", cyl(610, A_Y, A_Z, P["FAN_D"] / 2, P["FAN_L"], "x"),
+add("17_Вентилятор_SF4", cyl(395, A_Y, A_Z, P["FAN_D"] / 2, P["FAN_L"], "x"),
     "fan", None, 1, "SF 4\" на виброподвесах (огибающая)", "A", "оборудование")
-add("18_Шумоглушитель", cyl(880, A_Y, A_Z, P["SIL_D"] / 2, P["SIL_L"], "x"),
+add("18_Шумоглушитель", cyl(655, A_Y, A_Z, P["SIL_D"] / 2, P["SIL_L"], "x"),
     "silencer", None, 1, "Самодельный двухкамерный (огибающая)", "A", "оборудование")
-plenum = box(1210 - P["PLENUM_L"], A_Y - 150, Z_A0 + 20, P["PLENUM_L"], 300, MOD_A_H - T - 40)
+plenum = box(1005, A_Y - 150, Z_A0 + 20, P["PLENUM_L"], 300, MOD_A_H - T - 20)
 add("19_Пленум_выходной", plenum, "duct", None, 1, "Металл/фанера (огибающая)", "A", "оборудование")
-add("20_Решётка_400x300", box(W - T - 8, -T - 4, Z_A0 + 20, P["GRILLE_L"], 4, P["GRILLE_W"]),
-    "grille", None, 1, "Металл, в комнату", "A", "фурнитура")
+add("20_Решётка_400x300", box(832, -T - 4, Z_A0, P["GRILLE_L"], 4, P["GRILLE_W"]),
+    "grille", None, 1, "Металл, в комнату (на фасаде A)", "A", "фурнитура")
 
 # ============================== МОДУЛЬ C: КАМЕРА РОСТА ==============================
 add("21_Поддон_EVA", box(C_X0 + 20, 20, T, P["TRAY_L"], P["TRAY_W"], P["TRAY_H"]), "eva",
@@ -286,22 +298,61 @@ check("Высота: 1700 + 300", Z_A0 + MOD_A_H == H, f"{Z_A0} + {MOD_A_H} = {H
 check("Глубина: 600+12+80+8", D_ZONE + P["T_BACK_IN"] + P["D_CHANNEL"] + P["T_BACK_OUT"] == D,
       f"{D_ZONE}+{P['T_BACK_IN']}+{P['D_CHANNEL']}+{P['T_BACK_OUT']} = {D}")
 
+# ============================== КОДИРОВКА ИМЁН (кракозябры в КОМПАС) ==============================
+# OCCT пишет русские имена в STEP сырыми байтами UTF-8, а КОМПАС читает их как CP1251 —
+# получается «кракозябры». Поэтому имена компонентов и файлы экспортируются транслитом,
+# а соответствие «латиница → русское имя» сохраняется в csv/names_map.csv.
+_TRANSLIT = {
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "e", "ж": "zh",
+    "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m", "н": "n", "о": "o",
+    "п": "p", "р": "r", "с": "s", "т": "t", "у": "u", "ф": "f", "х": "h", "ц": "c",
+    "ч": "ch", "ш": "sh", "щ": "sch", "ъ": "", "ы": "y", "ь": "", "э": "e", "ю": "yu",
+    "я": "ya",
+}
+
+
+def latin(s):
+    out = []
+    for ch in s:
+        lo = ch.lower()
+        if lo in _TRANSLIT:
+            t = _TRANSLIT[lo]
+            out.append(t.capitalize() if ch.isupper() else t)
+        elif ch in "-_.()":
+            out.append(ch)
+        elif ch == " ":
+            out.append("_")
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
+NAME_MAP = {}   # латинское имя STEP → русское имя из модели
+
+
+def step_name(ru_name):
+    lat = latin(ru_name)
+    NAME_MAP[lat] = ru_name
+    return lat
+
+
 # ============================== ЭКСПОРТ ==============================
 asm = cq.Assembly(name="GrowBox_v3.1_rev2")
 compound_shapes = []
 for i, p in enumerate(parts, 1):
     nm = p["name"]
+    snm = step_name(nm)
     col = cq.Color(*p["color"])
-    asm.add(cq.Workplane(obj=p["shape"]), name=nm, color=col)
+    asm.add(cq.Workplane(obj=p["shape"]), name=snm, color=col)
     compound_shapes.append(p["shape"])
     if p["kind"] == "деталь":
         exporters.export(cq.Workplane(obj=p["shape"]),
-                         os.path.join(HERE, "step", "parts", f"{nm}.step"))
+                         os.path.join(HERE, "step", "parts", f"{snm}.step"))
     # DXF для плоских деталей
     if p["cut"]:
         L, Wd, Tt = p["cut"]
         wp = cq.Workplane("XY").rect(L, Wd)
-        exporters.export(wp, os.path.join(HERE, "dxf", f"{nm}.dxf"), exportType="DXF")
+        exporters.export(wp, os.path.join(HERE, "dxf", f"{snm}.dxf"), exportType="DXF")
 
 asm.save(os.path.join(HERE, "step", "growbox_v31_rev2_assembly.step"))
 exporters.export(cq.Workplane(obj=Compound.makeCompound(compound_shapes)),
@@ -342,7 +393,7 @@ for p in parts:
         sh = _rot(sh, 0, 0, H, 1, 0, 0, -OPEN_ANGLE_GAS)
     elif nm.startswith(("22_Платформа", "23_Горшок")):
         sh = _mv(sh, 0, -SLIDE_PLATFORM, 0)
-    asm_open.add(cq.Workplane(obj=sh), name=nm, color=cq.Color(*p["color"]))
+    asm_open.add(cq.Workplane(obj=sh), name=step_name(nm), color=cq.Color(*p["color"]))
 
 asm_open.save(os.path.join(HERE, "step", "growbox_v31_rev2_open.step"))
 try:
@@ -371,6 +422,12 @@ with open(os.path.join(HERE, "csv", "cutlist.csv"), "w", newline="", encoding="u
     for i, p in enumerate(parts, 1):
         if p["cut"]:
             wtr.writerow([i, p["name"], *p["cut"], p["qty"], p["mat"], p["module"]])
+
+with open(os.path.join(HERE, "csv", "names_map.csv"), "w", newline="", encoding="utf-8-sig") as f:
+    wtr = csv.writer(f, delimiter=";")
+    wtr.writerow(["Имя в STEP (латиница)", "Русское наименование", "Модуль", "Тип"])
+    for p in parts:
+        wtr.writerow([latin(p["name"]), p["name"], p["module"], p["kind"]])
 
 with open(os.path.join(HERE, "csv", "bom.csv"), "w", newline="", encoding="utf-8-sig") as f:
     wtr = csv.writer(f, delimiter=";")
