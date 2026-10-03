@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GrowBox v3.1 — 3D (мобильный)</title>
+<style>
+:root{--bg:#0a0e10;--panel:rgba(12,17,19,.9);--line:#22323a;--txt:#e6eef0;--dim:#8fa4ab;--acc:#c9f27f}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#app{position:relative;width:100%;height:100%}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+.top{position:absolute;top:calc(10px + env(safe-area-inset-top));left:12px;right:12px;z-index:5;
+  display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none}
+.pill{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 12px;
+  font-size:11.5px;letter-spacing:.04em;backdrop-filter:blur(6px)}
+.pill b{color:var(--acc)}
+.bar{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:10px 12px calc(12px + env(safe-area-inset-bottom));
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:linear-gradient(to top,rgba(10,14,16,.96),rgba(10,14,16,0))}
+.bar button{flex:0 0 auto;font:inherit;font-size:12px;color:var(--txt);background:var(--panel);
+  border:1px solid var(--line);border-radius:11px;padding:10px 13px;cursor:pointer;min-height:42px}
+.bar button.on{background:var(--acc);border-color:var(--acc);color:#12200b;font-weight:650}
+#info{position:absolute;left:12px;right:12px;bottom:78px;z-index:6;background:var(--panel);
+  border:1px solid var(--line);border-radius:12px;padding:11px 13px;display:none}
+#info .n{font-size:13px;font-weight:650}
+#info .d{font-size:11.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+#hint{position:absolute;left:12px;top:64px;z-index:4;font-size:11px;color:var(--dim);
+  background:rgba(10,14,16,.6);padding:6px 10px;border-radius:8px;border:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="cv"></canvas>
+  <div class="top">
+    <div class="pill"><b>GrowBox v3.1</b> · 1250×700×2000</div>
+    <div class="pill" id="st">модули A / B / C</div>
+  </div>
+  <div id="hint">поворот — пальцем · зум — щипком · касание детали — описание</div>
+  <div id="info"><div class="n" id="iN"></div><div class="d" id="iD"></div></div>
+  <div class="bar">
+    <button id="bIso" class="on">Изо</button>
+    <button id="bFront">Фронт</button>
+    <button id="bSide">Сбоку</button>
+    <button id="bDoors">Двери</button>
+    <button id="bLight">Свет</button>
+    <button id="bReset">Сброс</button>
+  </div>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="model_parts.js"></script>
+<script>
+(function(){
+"use strict";
+var PARTS = window.GB_PARTS;
+var cv = document.getElementById('cv');
+var renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+var scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0e10);
+var camera = new THREE.PerspectiveCamera(42,1,0.05,60);
+var target = new THREE.Vector3(0,1.05,0);
+
+scene.add(new THREE.HemisphereLight(0xcfe4ee,0x0c1113,0.95));
+var key = new THREE.DirectionalLight(0xffffff,1.1); key.position.set(3,4.2,3.4); scene.add(key);
+var fill = new THREE.DirectionalLight(0x86b6ff,0.4); fill.position.set(-3,2.2,2.4); scene.add(fill);
+var floor = new THREE.Mesh(new THREE.PlaneGeometry(30,30),
+  new THREE.MeshStandardMaterial({color:0x12181b,roughness:.95}));
+floor.rotation.x=-Math.PI/2; scene.add(floor);
+
+var CX=625, CY=350;
+function px(x){return (x-CX)/1000} function py(z){return (z+60)/1000} function pz(y){return (CY-y)/1000}
+
+function groupOf(name){
+  if (name.indexOf('10_Дверь_B')===0||name.indexOf('53_')===0||name.indexOf('54_')===0||
+      name.indexOf('60_')===0||name.indexOf('61_')===0) return 'doorB';
+  if (name.indexOf('10_Дверь_C1')===0||name.indexOf('55_')===0||name.indexOf('56_')===0) return 'doorC1';
+  if (name.indexOf('10_Дверь_C2')===0||name.indexOf('57_')===0||name.indexOf('58_')===0) return 'doorC2';
+  return null;
+}
+var PIVOT={doorB:{p:[px(0),0,pz(0)],open:-100},doorC1:{p:[px(437),0,pz(0)],open:-100},
+           doorC2:{p:[px(1250),0,pz(0)],open:100}};
+
+var root=new THREE.Group(); scene.add(root);
+var groups={}, meshes=[], clickable=[];
+PARTS.forEach(function(p){
+  var b=p.b, geom, mesh;
+  var mat=new THREE.MeshStandardMaterial({color:new THREE.Color(p.c),
+    roughness:p.k==='деталь'?.8:.5, metalness:p.k==='деталь'?.06:.3});
+  if (p.s==='cyl'&&p.cy){
+    geom=new THREE.CylinderGeometry(p.cy.r/1000,p.cy.r/1000,p.cy.h/1000,22);
+    mesh=new THREE.Mesh(geom,mat);
+    if (p.cy.axis==='x') mesh.rotation.z=Math.PI/2;
+    else if (p.cy.axis==='y') mesh.rotation.x=Math.PI/2;
+  } else {
+    geom=new THREE.BoxGeometry(b[3]/1000,b[5]/1000,b[4]/1000);
+    mesh=new THREE.Mesh(geom,mat);
+  }
+  mesh.position.set(px(b[0]+b[3]/2), py(b[2]+b[5]/2), pz(b[1]+b[4]/2));
+  mesh.userData={part:p};
+  var g=groupOf(p.n);
+  if (g){
+    if (!groups[g]){ var gr=new THREE.Group(); gr.position.set(PIVOT[g].p[0],PIVOT[g].p[1],PIVOT[g].p[2]); groups[g]=gr; root.add(gr); }
+    mesh.position.sub(groups[g].position);
+    groups[g].add(mesh);
+  } else root.add(mesh);
+  meshes.push(mesh); clickable.push(mesh);
+});
+
+// камера
+var cam={r:3.7,th:.7,ph:1.2}, camT={r:3.7,th:.7,ph:1.2};
+function applyCam(k){
+  cam.r+=(camT.r-cam.r)*k; cam.th+=(camT.th-cam.th)*k; cam.ph+=(camT.ph-cam.ph)*k;
+  camera.position.set(target.x+cam.r*Math.sin(cam.ph)*Math.sin(cam.th),
+                      target.y+cam.r*Math.cos(cam.ph),
+                      target.z+cam.r*Math.sin(cam.ph)*Math.cos(cam.th));
+  camera.lookAt(target);
+}
+var drag=null,pinch=null;
+cv.addEventListener('touchstart',function(e){
+  if (e.touches.length===1) drag={x:e.touches[0].clientX,y:e.touches[0].clientY,moved:0};
+  if (e.touches.length===2){ drag=null;
+    pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); }
+},{passive:true});
+cv.addEventListener('touchmove',function(e){
+  if (drag&&e.touches.length===1){
+    var t=e.touches[0], dx=t.clientX-drag.x, dy=t.clientY-drag.y;
+    drag.moved+=Math.abs(dx)+Math.abs(dy); drag.x=t.clientX; drag.y=t.clientY;
+    camT.th-=dx*.008; camT.ph=Math.max(.2,Math.min(Math.PI-.15,camT.ph-dy*.008));
+  }
+  if (pinch&&e.touches.length===2){
+    var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+    camT.r=Math.max(1.1,Math.min(9,camT.r*(pinch/d))); pinch=d;
+  }
+},{passive:true});
+cv.addEventListener('touchend',function(e){
+  if (drag&&drag.moved<8) pickAt(lastTouch.x,lastTouch.y);
+  drag=null; pinch=null;
+},{passive:true});
+var lastTouch={x:0,y:0};
+cv.addEventListener('touchstart',function(e){ if(e.touches.length===1){lastTouch.x=e.touches[0].clientX;lastTouch.y=e.touches[0].clientY;} },{passive:true});
+// мышь для десктопа
+cv.addEventListener('pointerdown',function(e){ if(e.pointerType==='mouse'){ drag={x:e.clientX,y:e.clientY,moved:0}; } });
+cv.addEventListener('pointermove',function(e){
+  if (drag&&e.pointerType==='mouse'){
+    var dx=e.clientX-drag.x, dy=e.clientY-drag.y;
+    drag.moved+=Math.abs(dx)+Math.abs(dy); drag.x=e.clientX; drag.y=e.clientY;
+    camT.th-=dx*.006; camT.ph=Math.max(.2,Math.min(Math.PI-.15,camT.ph-dy*.006));
+  }
+});
+cv.addEventListener('pointerup',function(e){
+  if (drag&&drag.moved<8&&e.pointerType==='mouse') pickAt(e.clientX,e.clientY);
+  drag=null;
+});
+cv.addEventListener('wheel',function(e){ e.preventDefault();
+  camT.r=Math.max(1.1,Math.min(9,camT.r*(e.deltaY>0?1.12:.89))); },{passive:false});
+
+var ray=new THREE.Raycaster(), mouse=new THREE.Vector2();
+function pickAt(cx,cy){
+  var r=cv.getBoundingClientRect();
+  mouse.x=((cx-r.left)/r.width)*2-1; mouse.y=-((cy-r.top)/r.height)*2+1;
+  ray.setFromCamera(mouse,camera);
+  var hits=ray.intersectObjects(clickable,false);
+  var info=document.getElementById('info');
+  if (!hits.length){ info.style.display='none'; return; }
+  var p=hits[0].object.userData.part;
+  document.getElementById('iN').textContent=p.n.replace(/_/g,' ')+' · '+p.b[3]+'×'+p.b[4]+'×'+p.b[5]+' мм';
+  document.getElementById('iD').textContent='Модуль '+(p.m||'—')+' · '+p.k+'. Геометрия из CAD-сборки v3.1 rev.2.';
+  info.style.display='block';
+}
+
+var doors=false, light=false;
+var chamberLight=new THREE.PointLight(0xffe6b0,0,3.2); chamberLight.position.set(px(834),1.42,0); scene.add(chamberLight);
+function $(id){return document.getElementById(id)}
+$('bIso').addEventListener('click',function(){ setBtn(this); camT.r=3.7;camT.th=.7;camT.ph=1.2; target.y=1.05; });
+$('bFront').addEventListener('click',function(){ setBtn(this); camT.r=3.1;camT.th=0;camT.ph=1.32; target.y=1.05; });
+$('bSide').addEventListener('click',function(){ setBtn(this); camT.r=3.1;camT.th=1.57;camT.ph=1.32; target.y=1.05; });
+function setBtn(b){ ['bIso','bFront','bSide'].forEach(function(i){$(i).classList.remove('on')}); b.classList.add('on'); }
+$('bDoors').addEventListener('click',function(){
+  doors=!doors; this.classList.toggle('on',doors);
+  this.textContent=doors?'Закрыть':'Двери';
+});
+$('bLight').addEventListener('click',function(){
+  light=!light; this.classList.toggle('on',light);
+  chamberLight.intensity=light?1.6:0;
+  meshes.forEach(function(m){ if (m.userData.part.n.indexOf('25_SE3000')===0){
+    m.material.emissive=new THREE.Color(light?0xfff2cf:0x000000); m.material.emissiveIntensity=light?.9:0; } });
+});
+$('bReset').addEventListener('click',function(){
+  doors=false; light=false;
+  $('bDoors').classList.remove('on'); $('bDoors').textContent='Двери';
+  $('bLight').classList.remove('on'); chamberLight.intensity=0;
+  meshes.forEach(function(m){ if (m.userData.part.n.indexOf('25_SE3000')===0) m.material.emissive=new THREE.Color(0x000000); });
+  document.getElementById('info').style.display='none';
+  camT.r=3.7;camT.th=.7;camT.ph=1.2; target.y=1.05; setBtn($('bIso'));
+});
+
+function resize(){
+  var w=window.innerWidth, h=window.innerHeight;
+  renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+  // подгоняем дистанцию под пропорции экрана, чтобы шкаф (2,06 м) влезал целиком
+  var need = 1.35 / Math.min(1, camera.aspect * 0.62);
+  if (camT.r < need){ camT.r = need; cam.r = need; }
+}
+window.addEventListener('resize',resize); resize();
+
+var _prev=performance.now();
+function loop(){
+  requestAnimationFrame(loop);
+  var now=performance.now(), dt=Math.min(.1,(now-_prev)/1000); _prev=now;
+  var k=1-Math.exp(-10*dt);
+  applyCam(k);
+  ['doorB','doorC1','doorC2'].forEach(function(g){
+    var gr=groups[g]; if(!gr) return;
+    var to=doors?PIVOT[g].open*Math.PI/180:0;
+    gr.rotation.y+=(to-gr.rotation.y)*k;
+  });
+  renderer.render(scene,camera);
+}
+loop();
+})();
+</script>
+</body>
+</html>
