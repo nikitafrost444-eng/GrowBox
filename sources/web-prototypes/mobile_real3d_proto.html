@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GrowBox v3.1 — REAL 3D</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080b0d;color:#e8edef;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+*{box-sizing:border-box}
+#app{width:100%;height:100%;position:relative}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+.top{position:absolute;top:12px;left:12px;right:12px;z-index:10;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.logo,.status{background:rgba(8,11,13,.82);border:1px solid #303b40;border-radius:12px;padding:9px 12px;backdrop-filter:blur(10px)}
+.logo b{font-size:13px}.logo small,.status{font-size:10px;color:#aab5ba}
+.info{position:absolute;right:12px;top:62px;width:230px;z-index:10;background:rgba(8,11,13,.82);border:1px solid #303b40;border-radius:13px;padding:11px;backdrop-filter:blur(10px);pointer-events:none}
+.info b{display:block;font-size:12px;margin-bottom:5px}.info span{font-size:10px;line-height:1.4;color:#aeb8bc}
+.bottom{position:absolute;left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom));z-index:20;display:flex;gap:6px;overflow-x:auto;padding:5px;scrollbar-width:none}
+button{flex:0 0 auto;border:1px solid #3a464b;background:rgba(12,17,19,.92);color:#dce3e5;border-radius:10px;padding:10px 12px;min-height:42px;font:600 10px system-ui;touch-action:manipulation}
+button.active{background:#e2e8e9;color:#091013;border-color:#e2e8e9}
+@media(max-width:600px){.info{top:auto;bottom:68px;right:10px;width:185px}.status{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+<canvas id="c"></canvas>
+<div class="top"><div class="logo"><b>GrowBox v3.1</b><br><small>REAL PRODUCT 3D · 1250 × 700 × 2000</small></div><div class="status" id="st">READY</div></div>
+<div class="info"><b id="it">GrowBox v3.1</b><span id="ii">Потяните одним пальцем для вращения. Два пальца — масштаб. Нажатие на узел — информация.</span></div>
+<div class="bottom">
+<button data-v="iso" class="active">ISO</button><button data-v="front">FRONT</button><button data-v="side">SIDE</button><button data-v="top">TOP</button><button data-v="rear">REAR</button>
+<button id="open">ДВЕРИ</button><button id="cut">РАЗРЕЗ</button><button id="air">ВОЗДУХ</button><button id="light">СВЕТ</button><button id="lab">LABELS</button><button id="rst">RESET</button>
+</div>
+</div>
+<script>
+(function(){
+let THREE;
+function load(u,fb){let s=document.createElement('script');s.src=u;s.onload=()=>start();s.onerror=()=>fb?load(fb):null;document.head.appendChild(s)}
+load('https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js','https://unpkg.com/three@0.128.0/build/three.min.js');
+
+function start(){
+if(window.__realGrowBox)return;window.__realGrowBox=1;THREE=window.THREE;
+const canvas=document.getElementById('c'), renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputEncoding=THREE.sRGBEncoding;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x090c0e);
+const camera=new THREE.PerspectiveCamera(42,1,.05,100); 
+scene.add(new THREE.HemisphereLight(0xdfe7ea,0x101417,1.7));
+const sun=new THREE.DirectionalLight(0xffffff,2.3);sun.position.set(5,9,8);scene.add(sun);
+const rim=new THREE.DirectionalLight(0x9eb1b8,1.2);rim.position.set(-7,4,-6);scene.add(rim);
+
+const root=new THREE.Group();scene.add(root), body=new THREE.Group();root.add(body);
+const interior=new THREE.Group();root.add(interior), doors=new THREE.Group();root.add(doors), labels=new THREE.Group();root.add(labels), airflow=new THREE.Group();root.add(airflow);
+
+const M={
+panel:new THREE.MeshStandardMaterial({color:0x454b4e,roughness:.34,metalness:.12}),
+edge:new THREE.MeshStandardMaterial({color:0x171b1d,roughness:.52,metalness:.3}),
+dark:new THREE.MeshStandardMaterial({color:0x0b0e10,roughness:.3,metalness:.25}),
+alu:new THREE.MeshStandardMaterial({color:0x858e91,roughness:.22,metalness:.82}),
+steel:new THREE.MeshStandardMaterial({color:0xb7bec0,roughness:.24,metalness:.9}),
+white:new THREE.MeshStandardMaterial({color:0xdfe5e6,roughness:.4}),
+rubber:new THREE.MeshStandardMaterial({color:0x080a0b,roughness:.85}),
+water:new THREE.MeshPhysicalMaterial({color:0x27444e,roughness:.12,metalness:0,transparent:true,opacity:.82}),
+tray:new THREE.MeshStandardMaterial({color:0x2d3437,roughness:.55}),
+green:new THREE.MeshStandardMaterial({color:0x334a39,roughness:.7}),
+red:new THREE.MeshStandardMaterial({color:0x653638,roughness:.42}),
+glow:new THREE.MeshBasicMaterial({color:0xeef8f4})
+};
+function cube(g,x,y,z,w,h,d,m,bevel=.025){
+ let geo=new THREE.BoxGeometry(w,h,d);
+ let o=new THREE.Mesh(geo,m);o.position.set(x,y,z);g.add(o);return o;
+}
+function cyl(g,x,y,z,r,h,m,rx=0,ry=0,rz=0){
+ let o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,32),m);o.position.set(x,y,z);o.rotation.set(rx,ry,rz);g.add(o);return o;
+}
+function label(t,x,y,z){
+ const c=document.createElement('canvas');c.width=640;c.height=110;let q=c.getContext('2d');
+ q.fillStyle='rgba(4,7,8,.82)';q.roundRect(3,3,634,104,18);q.fill();q.font='bold 38px Arial';q.fillStyle='#e3eaec';q.fillText(t,22,70);
+ let s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true}));s.scale.set(2.25,.39,1);s.position.set(x,y,z);labels.add(s);
+}
+const W=3.75,D=2.1,H=6;
+
+// shell
+cube(body,0,H-.08,0,W,.16,D,M.panel);cube(body,0,.08,0,W,.16,D,M.panel);
+cube(body,-W/2+.08,H/2,0,.16,H,D,M.panel);cube(body,W/2-.08,H/2,0,.16,H,D,M.panel);
+cube(body,0,H/2,-D/2+.08,W-.16,H,.16,M.panel);
+// back service wall
+cube(body,0,H/2,D/2-.07,W-.16,H,.14,M.edge);
+// acoustic upper divider
+cube(body,0,5.08,0,W-.28,.10,D-.22,M.edge);
+// tech/grow divider
+cube(body,-.55,3.45,0,.08,3.1,D-.25,M.edge);
+
+// aluminum internal frame
+[-1.52,1.52].forEach(x=>[-.75,.75].forEach(z=>cube(body,x,3.05,z,.075,5.5,.075,M.alu)));
+[1.1,2.1,3.1,4.1,5.0].forEach(y=>cube(body,0,y,-.76,3.05,.065,.065,M.alu));
+
+// A upper acoustic compartment
+cube(interior,0,5.52,0,3.28,1.0,1.62,M.dark);
+cube(interior,-.92,5.52,0,1.05,.62,.82,M.edge); // filter
+cyl(interior,.15,5.52,0,.39,.95,M.alu,0,0,Math.PI/2); // SF4
+cube(interior,.82,5.52,0,.72,.65,1.15,M.dark); // silencer
+cube(interior,1.32,5.52,0,.32,.78,.92,M.alu); // plenum
+for(let i=-5;i<=5;i++)cube(interior,1.32+i*.075,5.52,-.84,.025,.62,.025,M.steel);
+
+// B column
+function tank(y){cube(interior,-1.05,y,.03,.9,.85,.75,M.water);cyl(interior,-1.05,y+.44,.03,.36,.07,M.edge)}
+tank(4.15);tank(1.0);
+cube(interior,-1.05,2.65,.03,.93,.58,.75,M.edge);
+cyl(interior,-1.05,3.48,.03,.35,.72,M.white);
+cube(interior,-.05,2.3,.03,.62,1.02,.7,M.dark);
+for(let i=0;i<7;i++)cube(interior,-.30+i*.075,2.3,.39,.03,.54,.03,M.steel);
+
+// C tray / pots
+cube(interior,.92,.48,0,2.08,.12,1.48,M.tray);
+cube(interior,.92,.60,0,1.98,.05,1.38,M.edge);
+[-.02,1.86].forEach(x=>{cyl(interior,x,1.02,0,.43,.64,M.green);cube(interior,x,1.36,0,.56,.08,.56,M.tray)});
+[-.04,1.88].forEach(x=>cube(interior,x,3.0,.05,.07,3.0,.07,M.alu));
+[2.05,2.5,2.95,3.4].forEach(y=>{cube(interior,.92,y,.05,1.98,.045,.045,M.alu);for(let i=0;i<7;i++)cube(interior,.0+i*.32,y,.05,.022,.022,1.9,M.alu)});
+// light assembly
+cube(interior,.92,4.72,.03,2.15,.07,.07,M.alu);
+cube(interior,.92,4.52,.03,1.82,.13,.60,M.white);
+cube(interior,.92,4.60,.03,1.78,.025,.58,M.glow);
+cube(interior,.24,4.33,.03,.10,.54,.62,M.red);cube(interior,1.60,4.33,.03,.10,.54,.62,M.red);
+// fans
+[.05,1.85].forEach(x=>{cyl(interior,x,3.82,-.83,.31,.12,M.dark,Math.PI/2);for(let k=0;k<5;k++){let b=cube(interior,x,3.82,-.91,.035,.42,.018,M.steel);b.rotation.z=k*1.256}});
+cyl(interior,1.82,2.2,-.82,.11,.23,M.white,Math.PI/2);
+
+// doors with sandwich layers
+const specs=[[-1.38,1.29],[-.02,1.18],[1.30,1.18]];
+specs.forEach((s,i)=>{
+ let d=new THREE.Group();d.position.set(s[0],3,-1.17);d.userData.home=s[0];
+ cube(d,0,0,0,s[1],5.72,.20,M.panel);
+ cube(d,0,0,.115,s[1]-.08,5.54,.025,M.edge);
+ // EPDM perimeter
+ cube(d,0,2.76,.145,s[1]-.12,.045,.025,M.rubber);cube(d,0,-2.76,.145,s[1]-.12,.045,.025,M.rubber);
+ cube(d,-s[1]/2+.025,0,.145,.045,5.5,.025,M.rubber);cube(d,s[1]/2-.025,0,.145,.045,5.5,.025,M.rubber);
+ // hinges
+ [-2.0,0,2.0].forEach(y=>cyl(d,s[1]/2-.09,y,.18,.05,.20,M.steel,Math.PI/2));
+ cube(d,s[1]/2-.12,0,.20,.035,.82,.055,M.steel);
+ doors.add(d);
+});
+label('A · UPPER TECH / NOISE',-.95,5.95,1.02);label('B · TECH COLUMN',-.85,3.0,1.02);label('C · GROW CHAMBER',1.0,3.0,1.02);
+
+// airflow particles
+for(let i=0;i<42;i++){let p=cyl(airflow,-1.45+(i%14)*.22,5.25+Math.floor(i/14)*.16,-1.0,.015,.06,M.glow,Math.PI/2);p.userData.phase=i*.22}
+airflow.visible=false;
+
+// interaction state
+let open=false,cut=false,light=false,showLabels=true,air=false;
+const target=new THREE.Vector3(0,3,0), spherical=new THREE.Spherical(9,1.0,.68), desired=new THREE.Spherical(9,1.0,.68);
+let pan=new THREE.Vector3(), desiredPan=new THREE.Vector3(), pinchStart=0, pinchDistance=0, dragging=false,lastX=0,lastY=0,lastTap=0;
+
+// Camera controls — deliberately independent of OrbitControls
+function apply(){spherical.radius=THREE.MathUtils.lerp(spherical.radius,desired.radius,.14);spherical.phi=THREE.MathUtils.lerp(spherical.phi,desired.phi,.14);spherical.theta=THREE.MathUtils.lerp(spherical.theta,desired.theta,.14);pan.lerp(desiredPan,.14);
+ let off=new THREE.Vector3().setFromSpherical(spherical);camera.position.copy(target).add(pan).add(off);camera.lookAt(target.clone().add(pan));}
+function setView(v){
+ if(v==='front'){desired.theta=0;desired.phi=Math.PI/2;desired.radius=8.5}
+ if(v==='side'){desired.theta=Math.PI/2;desired.phi=Math.PI/2;desired.radius=8.5}
+ if(v==='top'){desired.theta=.15;desired.phi=.35;desired.radius=8.2}
+ if(v==='rear'){desired.theta=Math.PI;desired.phi=Math.PI/2;desired.radius=8.5}
+ if(v==='iso'){desired.theta=.72;desired.phi=1.02;desired.radius=8.5}
+ document.querySelectorAll('[data-v]').forEach(b=>b.classList.toggle('active',b.dataset.v===v));
+}
+function doorsToggle(){open=!open;doors.children.forEach((d,i)=>{let dx=i===0?-.62:i===2?.62:0;d.position.x+=(open?dx:-dx);d.rotation.y=open?(i===0?-.5:i===2?.5:0):0});setText(open?'Двери открыты':'Двери закрыты',open?'Полный доступ к внутренним узлам':'Фасадный вид')}
+function setText(a,b){document.getElementById('it').textContent=a;document.getElementById('ii').textContent=b}
+function reset(){open=false;doors.children.forEach(d=>{d.position.x=0;d.rotation.y=0});cut=false;body.visible=true;air=false;airflow.visible=false;light=false;interior.children.forEach(o=>o.visible=true);interior.children.forEach(o=>{if(o.material===M.glow)o.visible=false});showLabels=true;labels.visible=true;desired.set(9,1.0,.68);desiredPan.set(0,0,0);setView('iso');setText('GrowBox v3.1','Потяните одним пальцем для плавного вращения. Два пальца — масштаб.')}
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>setView(b.dataset.v));
+document.getElementById('open').onclick=doorsToggle;
+document.getElementById('cut').onclick=()=>{cut=!cut;body.visible=!cut;setText(cut?'Инженерный разрез':'GrowBox v3.1',cut?'Снята оболочка — видны рама, техзоны и оборудование':'Оболочка возвращена')};
+document.getElementById('air').onclick=()=>{air=!air;airflow.visible=air;setText('Воздушный тракт',air?'SF4 → шумоглушитель → plenum → grille':'Воздушный поток скрыт')};
+document.getElementById('light').onclick=()=>{light=!light;interior.children.forEach(o=>{if(o.material===M.glow)o.visible=light});setText('SE3000',light?'Освещение включено':'Освещение выключено')};
+document.getElementById('lab').onclick=()=>{showLabels=!showLabels;labels.visible=showLabels};
+document.getElementById('rst').onclick=reset;
+
+// Pointer/touch: one coherent gesture, no competing click/move handlers
+let pointers=new Map();
+canvas.addEventListener('pointerdown',e=>{pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});canvas.setPointerCapture(e.pointerId);if(pointers.size===1){dragging=true;lastX=e.clientX;lastY=e.clientY}}, {passive:false});
+canvas.addEventListener('pointermove',e=>{
+ if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(pointers.size===1&&dragging){let dx=e.clientX-lastX,dy=e.clientY-lastY;desired.theta-=dx*.008;desired.phi=THREE.MathUtils.clamp(desired.phi+dy*.006,.25,2.85);lastX=e.clientX;lastY=e.clientY}
+ if(pointers.size===2){let a=[...pointers.values()];let d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(pinchDistance){desired.radius=THREE.MathUtils.clamp(pinchStart*pinchDistance/d,.6,15)}else{pinchDistance=d;pinchStart=desired.radius}}
+ e.preventDefault();
+},{passive:false});
+canvas.addEventListener('pointerup',e=>{pointers.delete(e.pointerId);if(pointers.size===0){dragging=false;pinchDistance=0;let n=performance.now();if(n-lastTap<280)reset();lastTap=n}},{passive:false});
+canvas.addEventListener('pointercancel',e=>{pointers.delete(e.pointerId);if(!pointers.size){dragging=false;pinchDistance=0}},{passive:false});
+canvas.addEventListener('wheel',e=>{desired.radius=THREE.MathUtils.clamp(desired.radius*(e.deltaY>0?1.08:.93),.6,15);e.preventDefault()},{passive:false});
+
+// Resize
+function resize(){let w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}addEventListener('resize',resize);resize();
+
+// Start
+setView('iso');interior.children.forEach(o=>{if(o.material===M.glow)o.visible=false});
+function animate(t){requestAnimationFrame(animate);apply();if(air)airflow.children.forEach((p,i)=>{p.position.x=-1.45+((t*.00035+i*.13)%2.9)});renderer.render(scene,camera)}
+animate(0);
+}
+})();
+</script>
+</body></html>

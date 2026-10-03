@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PIANO — для производства</title>
+<link rel="stylesheet" href="site-assets/site.css">
+</head>
+<body>
+
+<header class="site">
+  <nav class="nav">
+    <a class="brand" href="index.html">PIANO<small>GrowBox v3.1</small></a>
+    <div class="links">
+      <a href="index.html">Главная</a>
+      <a href="3d.html">3D</a>
+      <a href="modules.html">Модули</a>
+      <a href="engineering.html">Инженерия</a>
+      <a href="build.html" class="active">Производству</a>
+      <a href="gallery.html">Галерея</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap narrow">
+    <span class="eyebrow">Пакет для изготовления</span>
+    <h1>Не эскиз.<br>Задание на производство</h1>
+    <p class="lede">
+      Всё, что нужно цеху: карта раскроя, ведомость материалов, фурнитура,
+      допуски, последовательность сборки. Модель параметрическая —
+      размеры меняются без перерисовки.
+    </p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://github.com/nikitafrost444-eng/GrowBox">Все файлы на GitHub</a>
+      <a class="btn btn-ghost" href="3d.html">Проверить в 3D</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ГАБАРИТЫ ============ -->
+<section class="tight">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>1250 мм</b><span>ширина: 18 + 400 + 18 + 796 + 18</span></div>
+      <div class="stat"><b>700 мм</b><span>глубина, 741 с дверями-сэндвич</span></div>
+      <div class="stat"><b>2000 мм</b><span>высота: 1700 + 300 модуль A</span></div>
+      <div class="stat"><b>85</b><span>деталей в сборке, 38 плоских в раскрое</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ МАТЕРИАЛЫ ============ -->
+<section class="tight">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Материалы</span>
+      <h2>Из чего сделан</h2>
+      <p>Материалы выбраны под две задачи: мебельный вид снаружи
+         и моющееся пространство внутри.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Материал</th><th>Толщина</th><th>Где применяется</th></tr>
+        <tr><td><b>ЛДСП</b></td><td>18 мм</td><td>корпус, перегородки, двери, полки, цоколь</td></tr>
+        <tr><td><b>Фанера влагостойкая</b></td><td>12 мм</td><td>задние стенки мокрой зоны, ящики</td></tr>
+        <tr><td><b>Оргалит</b></td><td>8 мм</td><td>задние наружные стенки, ревизии</td></tr>
+        <tr><td><b>MLV (масса)</b></td><td>3 мм</td><td>звукоизоляция дверей и фасада A</td></tr>
+        <tr><td><b>Минвата</b></td><td>20 мм</td><td>поглотитель в дверях-сэндвич</td></tr>
+        <tr><td><b>EVA</b></td><td>—</td><td>поддон камеры, борт 50 мм</td></tr>
+        <tr><td><b>Профиль алюминиевый</b></td><td>30×30</td><td>рамы полок, крепление узлов</td></tr>
+      </table>
+    </div>
+
+    <div class="note" style="margin-top:24px">
+      <b>Раскрой.</b> 38 плоских деталей укладываются в два листа
+      2800 × 2070 мм. Полная карта раскроя — в файле
+      <b>models/v3.1/csv/cutlist.csv</b> репозитория, там же ведомость <b>bom.csv</b>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ КРЕПЁЖ ============ -->
+<section class="tight">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Крепёж и фурнитура</span>
+      <h2>Стандартное — там, где можно</h2>
+      <p>Нестандартных деталей минимум: фурнитура мебельная, крепёж
+         метрический, всё доступно в рознице.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Узел</th><th>Решение</th><th>Кол-во</th></tr>
+        <tr><td>Двери</td><td>петли Blum Clip с доводчиком, push-to-open</td><td><b>4 на створку</b> (12 всего)</td></tr>
+        <tr><td>Фасады на газлифтах</td><td>газлифт мебельный</td><td>4 (по 2 на фасад)</td></tr>
+        <tr><td>Ящики и платформа</td><td>направляющие Blum Tandem 500, полное выдвижение</td><td>3 пары</td></tr>
+        <tr><td>Виброопоры</td><td>каучук Shore A 40–60, фильтр / вентилятор / глушитель</td><td>8 + подвесы</td></tr>
+        <tr><td>Опоры корпуса</td><td>демпферные 80 × 80 × 60</td><td>4</td></tr>
+        <tr><td>Соединения</td><td>стяжки межсекционные, гайки-бочонки М5/М6, клеммы Wago</td><td>по карте</td></tr>
+        <tr><td>Проходы коммуникаций</td><td>гермовводы PG-13.5 / PG21, цветные, с уплотнением</td><td>4 линии</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ДОПУСКИ ============ -->
+<section class="tight">
+  <div class="wrap two-col">
+    <div>
+      <span class="eyebrow">Точность</span>
+      <h2>Где важен каждый миллиметр</h2>
+      <p>
+        Основная масса деталей режется с обычной мебельной точностью.
+        Но есть три узла, где отклонение ломает сборку, и они вынесены
+        в требования к раскрою.
+      </p>
+      <div class="features" style="margin-top:20px">
+        <div class="feature">
+          <div class="num">01</div>
+          <div>
+            <h4>Зазоры дверей — 3 мм</h4>
+            <p>Три створки на одной плоскости: перекос в 2 мм уже виден
+               и ломает тихое закрывание.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="num">02</div>
+          <div>
+            <h4>Камера — 600 мм внутри</h4>
+            <p>Светильник глубиной 585 мм. Уменьшение интерьера на 20 мм
+               оставит его снаружи.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="num">03</div>
+          <div>
+            <h4>Тракт Ø250 в модуле 300</h4>
+            <p>32 мм зазора на виброопоры. Смещение оси недопустимо.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="num">04</div>
+          <div>
+            <h4>Сервисный канал — 80 мм</h4>
+            <p>Четыре трассы с разными цветами, никаких стыков внутри канала.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figure class="fig-frame">
+      <img src="models/v3.1/renders/render_v31_front.png" alt="Фасад PIANO">
+      <figcaption class="cap">Фасад: три створки с зазорами 3 мм</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ СБОРКА ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Последовательность</span>
+      <h2>Сборка по шагам</h2>
+      <p>Порядок рассчитан так, чтобы каждый следующий шаг не мешал
+         предыдущему и любой узел оставался доступным.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step"><div><h4>Каркас и корпус</h4>
+        <p>Боковины, дно, перекрытие, перегородка B-C. Проверить габариты
+           1250 × 700 до затяжки стяжек.</p></div></div>
+      <div class="step"><div><h4>Задние стенки и сервисный канал</h4>
+        <p>Фанера мокрой зоны, канал 80 мм, оргалит. Проложить четыре трассы
+           и подписать их цветом.</p></div></div>
+      <div class="step"><div><h4>Цоколь и опоры</h4>
+        <p>Утопленный цоколь 55 мм, демпферные опоры, LED-лента 24 В
+           с подсветкой внутрь.</p></div></div>
+      <div class="step"><div><h4>Модуль A: тракт на виброопорах</h4>
+        <p>Фильтр, вентилятор, глушитель, пленум, решётка. Виброузлы не должны
+           касаться стенок — проверить зазоры после затяжки.</p></div></div>
+      <div class="step"><div><h4>Модуль B: ящики и баки</h4>
+        <p>Направляющие, ящик бака, сервисный ящик, полки. Баки — на сквозных
+           шпильках с шайбами.</p></div></div>
+      <div class="step"><div><h4>Модуль B: DIN-панель</h4>
+        <p>Съёмная, на быстросъёме. Разводка по группам, шины L / N / PE,
+           уравнивание потенциалов.</p></div></div>
+      <div class="step"><div><h4>Модуль C: поддон и платформа</h4>
+        <p>EVA-поддон с бортом, направляющие, платформа. Проверить ход
+           под нагрузкой до выставления стопоров.</p></div></div>
+      <div class="step"><div><h4>SCROG и подвесы света</h4>
+        <p>Рельсы, каретки, ограничители хода, роликовые подвесы,
+           страховочные тросы.</p></div></div>
+      <div class="step"><div><h4>Двери-сэндвич</h4>
+        <p>Сборка сэндвича (ЛДСП + мембрана + минвата) до установки петель,
+           затем петли Blum Clip ×4 на створку и доводчики.</p></div></div>
+      <div class="step"><div><h4>Уплотнение</h4>
+        <p>EPDM по периметру, лабиринт в торцах. Щели дверей — 3 мм
+           по всему контуру.</p></div></div>
+      <div class="step"><div><h4>Коммуникации</h4>
+        <p>Гермовводы, подключение воды и электрики, датчик протечки в поддон,
+           клапан нормально закрытый.</p></div></div>
+      <div class="step"><div><h4>Проверка</h4>
+        <p>Прогон аварийных сценариев: пропажа сети, протечка, отказ
+           вентилятора. Каждый — с ожидаемым безопасным исходом.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ФАЙЛЫ ============ -->
+<section class="tight">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Файлы</span>
+      <h2>Что лежит в репозитории</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Файл</th><th>Формат</th><th>Для чего</th></tr>
+        <tr><td>Модель v3.1, полная сборка</td><td>STEP</td><td>импорт в КОМПАС-3D, SolidWorks, любой CAD</td></tr>
+        <tr><td>Детали по отдельности</td><td>STEP ×28</td><td>чертежи и обработка</td></tr>
+        <tr><td>Раскрой</td><td>DXF ×20</td><td>раскрой ЛДСП и фанеры</td></tr>
+        <tr><td>Карта раскроя и ведомость</td><td>CSV</td><td>закупка и расчёт листов</td></tr>
+        <tr><td>Полное описание проекта</td><td>PDF</td><td>12 страниц с рендерами и чек-листами</td></tr>
+        <tr><td>Параметрический исходник</td><td>Python</td><td>пересборка под свои размеры</td></tr>
+      </table>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="gallery.html">Рендеры и чертежи</a>
+      <a class="btn btn-ghost" href="engineering.html">Как всё работает</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <div class="brand" style="margin-bottom:12px">PIANO<small>GrowBox v3.1</small></div>
+      <p style="color:var(--ink-2);max-width:34ch">Тихий шкаф-гроубокс на два растения.</p>
+    </div>
+    <div>
+      <h4>Разделы</h4>
+      <ul>
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="modules.html">Модули</a></li>
+        <li><a href="engineering.html">Инженерия</a></li>
+        <li><a href="3d.html">3D-модель</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Производство</h4>
+      <ul>
+        <li>Раскрой: 2 листа 2800 × 2070</li>
+        <li>85 деталей, 38 плоских</li>
+        <li>Фурнитура — стандартная</li>
+        <li>Модель параметрическая</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">PIANO GrowBox v3.1 rev.3 · 2026</div>
+</footer>
+
+</body>
+</html>

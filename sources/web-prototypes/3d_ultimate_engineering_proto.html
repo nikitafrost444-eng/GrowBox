@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GrowBox v3.1 — Ultimate Engineering 3D</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --panel: rgba(21, 27, 43, 0.85);
+            --border: #2d3748;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.25);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); overflow: hidden; height: 100vh; }
+        canvas { display: block; width: 100%; height: 100%; }
+
+        /* UI Overlay */
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .controls { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; pointer-events: auto; }
+        .btn { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.2s; backdrop-filter: blur(8px); }
+        .btn:hover, .btn.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 4px 12px var(--accent-glow); }
+
+        /* Inspector Panel */
+        #inspector {
+            position: absolute; top: 20px; right: 20px; width: 320px; max-height: 80vh; overflow-y: auto;
+            background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem;
+            backdrop-filter: blur(12px); transform: translateX(360px); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        #inspector.open { transform: translateX(0); }
+        #inspector h3 { color: var(--accent); margin-bottom: 0.5rem; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+        #inspector .close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; line-height: 1; }
+        #inspector .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-top: 0.5rem; }
+        .badge-fixed { background: rgba(16,185,129,0.2); color: var(--success); }
+        .badge-check { background: rgba(245,158,11,0.2); color: var(--warning); }
+        .badge-open { background: rgba(239,68,68,0.2); color: var(--danger); }
+        #inspector p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.5rem; }
+        #inspector .specs { background: rgba(255,255,255,0.03); border-radius: 6px; padding: 0.8rem; margin-top: 0.8rem; font-size: 0.8rem; }
+        #inspector .specs div { display: flex; justify-content: space-between; margin-bottom: 0.3rem; border-bottom: 1px dashed var(--border); padding-bottom: 0.3rem; }
+        #inspector .specs span:last-child { color: var(--text); font-weight: 500; }
+
+        /* Status Bar */
+        #status-bar { position: absolute; top: 20px; left: 20px; pointer-events: auto; }
+        #status-bar .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; backdrop-filter: blur(8px); width: 240px; }
+        #status-bar h4 { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent); }
+        #status-bar ul { list-style: none; font-size: 0.8rem; color: var(--muted); }
+        #status-bar li { margin-bottom: 0.3rem; display: flex; align-items: center; gap: 6px; }
+        #status-bar li::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+        #status-bar li.warn::before { background: var(--warning); }
+        #status-bar li.risk::before { background: var(--danger); }
+
+        /* Mobile Hint */
+        #hint { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: var(--muted); pointer-events: none; opacity: 0.8; }
+        @media(max-width:768px){ #inspector{ width: calc(100% - 40px); right: 20px; } #status-bar{ display:none; } }
+    </style>
+</head>
+<body>
+    <div id="ui-layer">
+        <div id="status-bar">
+            <div class="card">
+                <h4>📊 Project Status</h4>
+                <ul>
+                    <li>Architecture A/B/C fixed</li>
+                    <li>Acoustics concept defined</li>
+                    <li class="warn">Thermal: verify on build</li>
+                    <li class="risk">Floor load: 386 kg/m²</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="inspector">
+            <h3>Component Info <button class="close" onclick="closeInspector()">×</button></h3>
+            <div id="insp-content">
+                <p>Tap any node in the 3D scene to inspect engineering specs, zone assignment, and BOM status.</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn active" onclick="setView('iso')">ISOMETRIC</button>
+            <button class="btn" onclick="setView('front')">FRONT</button>
+            <button class="btn" onclick="setView('side')">SIDE</button>
+            <button class="btn" onclick="setView('top')">TOP</button>
+            <button class="btn" onclick="setView('engineering')">ENGINEERING</button>
+            <button class="btn" onclick="setView('cutaway')">CUTAWAY</button>
+            <button class="btn" onclick="setView('exploded')">EXPLODED</button>
+            <button class="btn" onclick="resetAll()">RESET</button>
+        </div>
+        <div id="hint">📱 Tap to inspect · Drag to orbit · Pinch to zoom</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        // --- CORE SETUP ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0b0f19);
+        scene.fog = new THREE.FogExp2(0x0b0f19, 0.0008);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 10, 10000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.minDistance = 400;
+        controls.maxDistance = 2500;
+        controls.target.set(0, 800, 0);
+
+        // --- LIGHTING ---
+        const ambient = new THREE.AmbientLight(0x405060, 0.6);
+        scene.add(ambient);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+        dirLight.position.set(800, 1200, 1000);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.set(2048, 2048);
+        scene.add(dirLight);
+        const fillLight = new THREE.PointLight(0x3b82f6, 0.5, 2000);
+        fillLight.position.set(-600, 400, -600);
+        scene.add(fillLight);
+        const rimLight = new THREE.PointLight(0xf59e0b, 0.3, 1500);
+        rimLight.position.set(600, 200, 800);
+        scene.add(rimLight);
+
+        // --- MATERIALS ---
+        const matCabinet = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.7, metalness: 0.1 });
+        const matDark = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8, metalness: 0.2 });
+        const matGlass = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0, transmission: 0.6, thickness: 5, transparent: true, opacity: 0.3 });
+        const matMetal = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.4, metalness: 0.8 });
+        const matAccent = new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x3b82f6, emissiveIntensity: 0.2, roughness: 0.5 });
+        const matWarning = new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xf59e0b, emissiveIntensity: 0.3 });
+
+        // --- GEOMETRY BUILDER (v3.1 PROPORTIONS) ---
+        const group = new THREE.Group();
+        scene.add(group);
+
+        // Helper to create box with metadata
+        function addBox(w, h, d, x, y, z, mat, name, zone, specs, status) {
+            const geo = new THREE.BoxGeometry(w, h, d);
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(x, y, z);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.userData = { name, zone, specs, status, originalMat: mat };
+            group.add(mesh);
+            return mesh;
+        }
+
+        // Module A (Top Acoustic: 1250x700x300)
+        addBox(1250, 300, 700, 0, 1850, 0, matCabinet, 'Module A · Air/Noise', 'A', 
+            'SF4 Filter → SF4 Fan → 2-Chamber Silencer → Plenum 600×250 → Grille', 'fixed');
+        
+        // Module B (Tech Column: 400x700x1700)
+        addBox(400, 1700, 700, -425, 850, 0, matDark, 'Module B · Tech Column', 'B', 
+            '20L Tank → Service Drawer → Humidifier → DIN Panel → Reserve Tank', 'fixed');
+        
+        // Module C (Grow Chamber: 796x700x1700)
+        addBox(796, 1700, 700, 425, 850, 0, matCabinet, 'Module C · Grow Chamber', 'C', 
+            'EVA Tray → 2×15L Platform → SCROG 700×500 → SE3000 + UV/IR', 'fixed');
+
+        // Service Channel (Rear 80mm)
+        addBox(1250, 1700, 80, 0, 850, -390, matGlass, 'Service Channel 80mm', 'S', 
+            'Power/LV/Water/Air routing · Color-coded grommets', 'fixed');
+
+        // Doors (3 panels)
+        const doorB = addBox(434, 1700, 40, -647, 850, 370, matDark, 'Door B · Tech', 'S', '41mm Sandwich · Blum Clip×4 · Push-to-Open', 'fixed');
+        const doorC1 = addBox(405, 1700, 40, -217, 850, 370, matDark, 'Door C1 · Grow Left', 'S', '41mm Sandwich · Acoustic seal', 'fixed');
+        const doorC2 = addBox(405, 1700, 40, 217, 850, 370, matDark, 'Door C2 · Grow Right', 'S', '41mm Sandwich · Light trap overlap', 'fixed');
+
+        // Internal Equipment (Simplified but recognizable)
+        addBox(200, 150, 150, -425, 400, 0, matAccent, 'Working Tank 20L', 'B', 'Food-grade · Drain valve · Leak sensor', 'fixed');
+        addBox(200, 150, 150, -425, 1400, 0, matWarning, 'Reserve Tank 20L', 'B', 'Auto-fill · Float valve 3/4"', 'fixed');
+        addBox(300, 40, 150, 0, 1600, 0, matMetal, 'DIN Panel', 'B', 'GGS Controller · 2×AC10 · UPS 600VA · Watchdog', 'check');
+        addBox(150, 150, 100, 425, 600, 0, matAccent, 'Pull-out Platform', 'C', 'Tandem 500 · 2×15L pots · Lockable', 'fixed');
+        addBox(400, 20, 300, 425, 1200, 0, matGlass, 'SCROG V-Frame', 'C', '700×500 · 4 levels · 150-180mm step', 'fixed');
+        addBox(600, 70, 580, 425, 1450, 0, matMetal, 'SE3000 + UV/IR', 'C', '300W · PPF 856 · Rolling suspension · 300mm travel', 'fixed');
+
+        // Highlight selection
+        let selectedMesh = null;
+        const highlightMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x3b82f6, emissiveIntensity: 0.5, transparent: true, opacity: 0.8 });
+
+        // --- INTERACTION ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function onSelect(event) {
+            const x = event.clientX || (event.touches && event.touches[0].clientX);
+            const y = event.clientY || (event.touches && event.touches[0].clientY);
+            if(!x) return;
+            mouse.x = (x / window.innerWidth) * 2 - 1;
+            mouse.y = -(y / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(group.children, false);
+
+            if (intersects.length > 0) {
+                const obj = intersects[0].object;
+                if(selectedMesh && selectedMesh !== obj) {
+                    selectedMesh.material = selectedMesh.userData.originalMat;
+                }
+                selectedMesh = obj;
+                obj.material = highlightMat;
+                showInspector(obj.userData);
+            } else {
+                closeInspector();
+                if(selectedMesh) {
+                    selectedMesh.material = selectedMesh.userData.originalMat;
+                    selectedMesh = null;
+                }
+            }
+        }
+        window.addEventListener('click', onSelect);
+        window.addEventListener('touchstart', onSelect, {passive: true});
+
+        // --- INSPECTOR LOGIC ---
+        const insp = document.getElementById('inspector');
+        const inspContent = document.getElementById('insp-content');
+
+        function showInspector(data) {
+            let statusClass = data.status === 'fixed' ? 'badge-fixed' : (data.status === 'check' ? 'badge-check' : 'badge-open');
+            let statusText = data.status === 'fixed' ? 'Зафиксировано' : (data.status === 'check' ? 'Проверить' : 'Открыто');
+            
+            inspContent.innerHTML = `
+                <p><strong>Зона:</strong> ${data.zone} &nbsp; <span class="badge ${statusClass}">${statusText}</span></p>
+                <p>${data.specs}</p>
+                <div class="specs">
+                    <div><span>Наименование</span><span>${data.name}</span></div>
+                    <div><span>Тип</span><span>3D Node · v3.1</span></div>
+                    <div><span>Источник</span><span>CAD/STEP Truth</span></div>
+                </div>
+                <p style="margin-top:0.8rem; font-size:0.75rem; color:#64748b;">Tap outside to close</p>
+            `;
+            insp.classList.add('open');
+        }
+
+        window.closeInspector = () => insp.classList.remove('open');
+
+        // --- CAMERA & VIEW TRANSITIONS ---
+        const views = {
+            iso: { pos: {x:1400, y:1200, z:1600}, target: {x:0, y:800, z:0} },
+            front: { pos: {x:0, y:800, z:2200}, target: {x:0, y:800, z:0} },
+            side: { pos: {x:2200, y:800, z:0}, target: {x:0, y:800, z:0} },
+            top: { pos: {x:0, y:2800, z:0}, target: {x:0, y:0, z:0} },
+            engineering: { pos: {x:1000, y:1000, z:1200}, target: {x:-200, y:900, z:0} },
+            cutaway: { pos: {x:1200, y:900, z:1000}, target: {x:400, y:800, z:0} },
+            exploded: { pos: {x:1400, y:1400, z:1400}, target: {x:0, y:800, z:0} }
+        };
+
+        let currentView = 'iso';
+        let animating = false;
+
+        window.setView = (viewName) => {
+            if(animating) return;
+            animating = true;
+            currentView = viewName;
+            document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const targetPos = views[viewName].pos;
+            const targetTarget = views[viewName].target;
+            const startPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+            const startTarget = { x: controls.target.x, y: controls.target.y, z: controls.target.z };
+            const duration = 1200;
+            const startTime = Date.now();
+
+            // Animate modules for engineering/cutaway/exploded
+            const modA = group.children[0], modB = group.children[1], modC = group.children[2];
+            const doors = [group.children[5], group.children[6], group.children[7]];
+            
+            function animateCam() {
+                const elapsed = Date.now() - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+                camera.position.x = startPos.x + (targetPos.x - startPos.x) * ease;
+                camera.position.y = startPos.y + (targetPos.y - startPos.y) * ease;
+                camera.position.z = startPos.z + (targetPos.z - startPos.z) * ease;
+                controls.target.x = startTarget.x + (targetTarget.x - startTarget.x) * ease;
+                controls.target.y = startTarget.y + (targetTarget.y - startTarget.y) * ease;
+                controls.target.z = startTarget.z + (targetTarget.z - startTarget.z) * ease;
+
+                // Module transformations based on view
+                if(viewName === 'engineering') {
+                    doors.forEach((d, i) => d.rotation.y = -Math.PI/2.5 * (i+1) * ease);
+                    modA.material.opacity = 0.2; modA.material.transparent = true;
+                    modB.material.opacity = 0.4; modB.material.transparent = true;
+                } else if(viewName === 'cutaway') {
+                    modC.visible = t > 0.5;
+                    doors.forEach(d => d.visible = false);
+                } else if(viewName === 'exploded') {
+                    modA.position.y = 1850 + 400 * ease;
+                    modB.position.x = -425 - 300 * ease;
+                    modC.position.x = 425 + 300 * ease;
+                } else {
+                    doors.forEach(d => d.rotation.y = 0);
+                    modA.material.opacity = 1; modA.material.transparent = false;
+                    modB.material.opacity = 1; modB.material.transparent = false;
+                    modC.visible = true; doors.forEach(d => d.visible = true);
+                    modA.position.y = 1850; modB.position.x = -425; modC.position.x = 425;
+                }
+
+                if(t < 1) requestAnimationFrame(animateCam);
+                else animating = false;
+            }
+            animateCam();
+        };
+
+        window.resetAll = () => {
+            setView('iso');
+            closeInspector();
+        };
+
+        // --- RESIZE & LOOP ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Initial view
+        camera.position.set(1400, 1200, 1600);
+        controls.target.set(0, 800, 0);
+    </script>
+</body>
+</html>
